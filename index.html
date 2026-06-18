@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UrbanWear — Wear the Streets</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&family=Barlow+Condensed:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --black:  #080808;
+  --dark:   #0f0f0f;
+  --card:   #141414;
+  --border: #2a2a2a;
+  --gray:   #777;
+  --muted:  #aaa;
+  --white:  #f0f0f0;
+  --orange: #e8420a;
+  --og2:    #ff5722;
+}
+html { scroll-behavior: smooth; }
+body { font-family: 'Inter', sans-serif; background: var(--black); color: var(--white); overflow-x: hidden; }
+
+/* ── MARQUEE ── */
+.mbar { background: var(--orange); padding: 8px 0; overflow: hidden; white-space: nowrap; }
+.mtrack { display: inline-flex; animation: mrun 22s linear infinite; }
+.mtrack span { font-family:'Barlow Condensed',sans-serif; font-size:.76rem; font-weight:700; letter-spacing:.2em; text-transform:uppercase; color:#fff; padding:0 24px; }
+.mtrack .dot { color:rgba(255,255,255,.4); padding:0 2px; }
+@keyframes mrun { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+/* ── STICKY NAV ── */
+.nav-wrap {
+  position: sticky; top: 0; z-index: 999;
+  background: rgba(8,8,8,0.96);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  transition: all 0.3s;
+}
+nav {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 56px; max-width: 1400px; margin: 0 auto;
+}
+.logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2rem; letter-spacing: .05em;
+  color: var(--white); text-decoration: none;
+}
+.logo em { color: var(--orange); font-style: normal; }
+.nav-links { display: flex; gap: 32px; align-items: center; }
+.nav-links a {
+  font-size: .76rem; font-weight: 600; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--gray); text-decoration: none;
+  transition: color .2s;
+}
+.nav-links a:hover { color: var(--white); }
+.nav-cta {
+  background: var(--orange) !important; color: #fff !important;
+  padding: 10px 22px; border-radius: 2px; transition: background .2s !important;
+}
+.nav-cta:hover { background: var(--og2) !important; }
+
+/* ── HERO ── */
+.hero {
+  height: 100vh; min-height: 600px;
+  display: grid; grid-template-columns: 1fr 1fr;
+  overflow: hidden; position: relative;
+}
+.hero-left {
+  display: flex; flex-direction: column; justify-content: flex-end;
+  padding: 0 56px 72px; position: relative; z-index: 2;
+  background: var(--black);
+}
+.hero-eyebrow {
+  font-size: .7rem; font-weight: 700; letter-spacing: .28em;
+  text-transform: uppercase; color: var(--orange);
+  margin-bottom: 20px; display: flex; align-items: center; gap: 10px;
+}
+.hero-eyebrow::before { content:''; width:28px; height:2px; background:var(--orange); }
+.hero-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(5.5rem, 10vw, 11rem);
+  line-height: .88; letter-spacing: .02em; color: var(--white);
+  margin-bottom: 36px;
+}
+.hero-title .acc { color: var(--orange); }
+.hero-title .out { -webkit-text-stroke:2px var(--white); color:transparent; }
+.hero-desc {
+  font-size: .88rem; line-height: 1.75; color: var(--gray);
+  max-width: 340px; margin-bottom: 36px;
+}
+.hero-btns { display: flex; gap: 12px; flex-wrap: wrap; }
+.btn-fill {
+  background: var(--orange); color: #fff;
+  padding: 14px 34px; border-radius: 2px;
+  font-size: .78rem; font-weight: 700; letter-spacing: .14em;
+  text-transform: uppercase; text-decoration: none; border: none;
+  cursor: pointer; transition: background .2s, transform .15s; display: inline-block;
+}
+.btn-fill:hover { background: var(--og2); transform: translateY(-2px); }
+.btn-ghost {
+  border: 1.5px solid var(--border); color: var(--muted);
+  padding: 13px 32px; border-radius: 2px;
+  font-size: .78rem; font-weight: 700; letter-spacing: .14em;
+  text-transform: uppercase; text-decoration: none; background: transparent;
+  cursor: pointer; transition: all .2s; display: inline-block;
+}
+.btn-ghost:hover { border-color: var(--orange); color: var(--orange); }
+.hero-stats {
+  display: flex; gap: 40px; margin-top: 48px;
+  padding-top: 36px; border-top: 1px solid var(--border);
+}
+.hstat-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.6rem; color: var(--white); line-height: 1;
+}
+.hstat-num em { color: var(--orange); font-style: normal; }
+.hstat-lbl { font-size: .65rem; letter-spacing: .18em; text-transform: uppercase; color: var(--gray); margin-top: 4px; }
+
+.hero-right {
+  position: relative; overflow: hidden;
+}
+.hero-img {
+  width: 100%; height: 100%; object-fit: cover;
+  object-position: top; display: block; filter: brightness(.8);
+}
+.hero-img-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(90deg, var(--black) 0%, transparent 30%);
+}
+/* Tag badge on hero image */
+.hero-badge {
+  position: absolute; bottom: 40px; right: 40px;
+  background: var(--orange); padding: 16px 22px;
+  border-radius: 2px; text-align: center;
+}
+.hero-badge .b1 { font-family:'Bebas Neue',sans-serif; font-size:1.5rem; color:#fff; display:block; }
+.hero-badge .b2 { font-size:.65rem; font-weight:700; letter-spacing:.18em; text-transform:uppercase; color:rgba(255,255,255,.8); }
+
+/* ── SECTION BASE ── */
+.sec-ey { font-size:.68rem; font-weight:700; letter-spacing:.28em; text-transform:uppercase; color:var(--orange); margin-bottom:12px; }
+.sec-ttl { font-family:'Bebas Neue',sans-serif; font-size:clamp(2.6rem,4.5vw,4.2rem); line-height:.92; letter-spacing:.03em; color:var(--white); }
+.sec-ttl .dim { color:var(--gray); }
+
+/* ── CATEGORIES ── */
+.cats-sec { padding: 110px 56px; background: var(--dark); }
+.cats-hdr { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:52px; flex-wrap:wrap; gap:16px; }
+.sec-lnk { font-size:.75rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--orange); text-decoration:none; transition:opacity .2s; }
+.sec-lnk:hover { opacity:.7; }
+.cats-grid {
+  display: grid;
+  grid-template-columns: 1.8fr 1fr 1fr;
+  grid-template-rows: 400px 260px;
+  gap: 10px;
+}
+.cat-cell {
+  border-radius: 3px; overflow: hidden; position: relative; cursor: pointer;
+  background: var(--card);
+}
+.cat-cell:first-child { grid-row: span 2; }
+.cat-cell img {
+  width:100%; height:100%; object-fit:cover; display:block;
+  transition: transform .5s; filter: brightness(.7);
+}
+.cat-cell:hover img { transform:scale(1.05); filter:brightness(.5); }
+.cat-ov {
+  position:absolute; inset:0;
+  background:linear-gradient(to top, rgba(0,0,0,.9) 0%, transparent 55%);
+  display:flex; flex-direction:column; justify-content:flex-end; padding:24px;
+}
+.cat-tag { font-size:.62rem; font-weight:700; letter-spacing:.2em; text-transform:uppercase; color:var(--orange); margin-bottom:5px; }
+.cat-nm { font-family:'Bebas Neue',sans-serif; font-size:1.9rem; letter-spacing:.04em; color:#fff; line-height:1; }
+.cat-cnt { font-size:.73rem; color:rgba(255,255,255,.5); margin-top:3px; }
+
+/* ── FEATURED ── */
+.feat-sec { padding: 100px 0; background: var(--black); }
+.feat-hdr { padding:0 56px 48px; display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:16px; }
+.strip { display:flex; gap:18px; padding:0 56px; overflow-x:auto; scrollbar-width:none; cursor:grab; }
+.strip::-webkit-scrollbar { display:none; }
+.strip:active { cursor:grabbing; }
+.pcard { flex-shrink:0; width:280px; border-radius:3px; overflow:hidden; background:var(--card); border:1px solid var(--border); transition:border-color .2s; }
+.pcard:hover { border-color:var(--orange); }
+.pcard-img { width:100%; height:360px; object-fit:cover; display:block; transition:transform .4s; filter:brightness(.85); }
+.pcard:hover .pcard-img { transform:scale(1.04); filter:brightness(.7); }
+.pcard-body { padding:16px 18px 20px; }
+.pcard-badge { font-size:.6rem; font-weight:700; letter-spacing:.18em; text-transform:uppercase; color:var(--orange); margin-bottom:5px; }
+.pcard-name { font-family:'Barlow Condensed',sans-serif; font-size:1.1rem; font-weight:700; color:var(--white); margin-bottom:4px; }
+.pcard-price { font-size:.85rem; color:var(--gray); }
+.pcard-price strong { color:var(--orange); }
+
+/* ── WHY ── */
+.why-sec { padding:110px 56px; background:var(--dark); }
+.why-inner { display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center; }
+.why-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.why-card {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:3px; padding:28px 22px;
+  transition:border-color .2s, transform .2s;
+}
+.why-card:hover { border-color:var(--orange); transform:translateY(-4px); }
+.wicon { width:42px; height:42px; background:rgba(232,66,10,.12); border-radius:3px; display:flex; align-items:center; justify-content:center; font-size:1.2rem; margin-bottom:14px; }
+.why-card h4 { font-family:'Barlow Condensed',sans-serif; font-size:1.05rem; font-weight:700; color:var(--white); margin-bottom:7px; letter-spacing:.03em; }
+.why-card p { font-size:.78rem; color:var(--gray); line-height:1.6; }
+
+/* ── REVIEWS ── */
+.rev-sec { padding:100px 56px; background:var(--black); }
+.rev-hdr { text-align:center; margin-bottom:56px; }
+.rev-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; max-width:1100px; margin:0 auto; }
+.rcard {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:3px; padding:30px 26px; transition:border-color .2s;
+}
+.rcard:hover { border-color:var(--orange); }
+.rcard .stars { color:var(--orange); font-size:.88rem; margin-bottom:14px; }
+.rcard .rtxt { font-size:.86rem; line-height:1.7; color:var(--muted); margin-bottom:22px; font-style:italic; }
+.rauthor { display:flex; align-items:center; gap:12px; }
+.ravatar { width:36px; height:36px; border-radius:50%; background:var(--orange); display:flex; align-items:center; justify-content:center; font-family:'Bebas Neue',sans-serif; font-size:.95rem; color:#fff; flex-shrink:0; }
+.rname { font-size:.8rem; font-weight:700; color:var(--white); }
+.rloc { font-size:.7rem; color:var(--gray); }
+
+/* ── CTA BAND ── */
+.cta-band {
+  margin:0 56px 80px; background:var(--orange); border-radius:4px;
+  padding:72px 60px; display:flex; justify-content:space-between;
+  align-items:center; flex-wrap:wrap; gap:28px; position:relative; overflow:hidden;
+}
+.cta-band::after { content:'URBAN'; position:absolute; right:-30px; top:50%; transform:translateY(-50%); font-family:'Bebas Neue',sans-serif; font-size:16rem; color:rgba(0,0,0,.1); line-height:1; pointer-events:none; white-space:nowrap; }
+.cta-band h2 { font-family:'Bebas Neue',sans-serif; font-size:clamp(2.2rem,4vw,3.8rem); color:#fff; line-height:.95; margin-bottom:10px; }
+.cta-band p { font-size:.88rem; color:rgba(255,255,255,.75); }
+.btn-dark { background:var(--black); color:var(--white); padding:15px 36px; border-radius:2px; font-size:.78rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; text-decoration:none; white-space:nowrap; transition:background .2s; }
+.btn-dark:hover { background:#1a1a1a; }
+
+/* ── CONTACT ── */
+.contact-sec { padding:110px 56px; background:var(--dark); }
+.contact-inner { display:grid; grid-template-columns:1fr 1fr; gap:72px; max-width:1200px; margin:0 auto; }
+.cl p { font-size:.87rem; color:var(--gray); line-height:1.75; margin:20px 0 36px; }
+.cd { display:flex; align-items:flex-start; gap:14px; margin-bottom:20px; }
+.cdicon { width:40px; height:40px; background:rgba(232,66,10,.1); border:1px solid rgba(232,66,10,.2); border-radius:3px; display:flex; align-items:center; justify-content:center; font-size:1rem; flex-shrink:0; }
+.cdbody { font-size:.83rem; color:var(--gray); line-height:1.5; }
+.cdbody strong { display:block; color:var(--white); font-weight:600; margin-bottom:2px; }
+.cdbody a { color:var(--orange); text-decoration:none; font-weight:600; }
+.wa-btn { display:inline-flex; align-items:center; gap:10px; background:#25D366; color:#fff; padding:13px 30px; border-radius:2px; font-size:.78rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; text-decoration:none; margin-top:6px; transition:opacity .2s; }
+.wa-btn:hover { opacity:.88; }
+.form-row2 { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.fg { margin-bottom:14px; }
+.fg label { display:block; font-size:.68rem; font-weight:700; letter-spacing:.16em; text-transform:uppercase; color:var(--gray); margin-bottom:7px; }
+.fg input,.fg select,.fg textarea { width:100%; padding:12px 15px; background:var(--card); border:1px solid var(--border); border-radius:2px; color:var(--white); font-family:'Inter',sans-serif; font-size:.86rem; outline:none; transition:border-color .2s; resize:none; }
+.fg input:focus,.fg select:focus,.fg textarea:focus { border-color:var(--orange); }
+.fg select option { background:var(--card); }
+
+/* ── FOOTER ── */
+footer { background:var(--black); border-top:1px solid var(--border); padding:56px 56px 28px; }
+.ft { display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:36px; margin-bottom:44px; }
+.ft-logo { font-family:'Bebas Neue',sans-serif; font-size:2rem; letter-spacing:.05em; color:var(--white); margin-bottom:10px; }
+.ft-logo em { color:var(--orange); font-style:normal; }
+.ft-brand p { font-size:.8rem; color:var(--gray); line-height:1.65; max-width:240px; }
+.ft-cols { display:flex; gap:52px; flex-wrap:wrap; }
+.ft-col h5 { font-size:.68rem; font-weight:700; letter-spacing:.22em; text-transform:uppercase; color:var(--white); margin-bottom:16px; }
+.ft-col a { display:block; font-size:.8rem; color:var(--gray); text-decoration:none; margin-bottom:9px; transition:color .2s; }
+.ft-col a:hover { color:var(--orange); }
+.ft-btm { border-top:1px solid var(--border); padding-top:24px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; }
+.ft-btm p { font-size:.73rem; color:var(--gray); }
+.ft-btm strong { color:var(--orange); }
+.socials { display:flex; gap:10px; }
+.soc { width:34px; height:34px; border:1px solid var(--border); border-radius:2px; display:flex; align-items:center; justify-content:center; color:var(--gray); text-decoration:none; font-size:.78rem; font-weight:700; transition:all .2s; }
+.soc:hover { border-color:var(--orange); color:var(--orange); }
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  nav{padding:16px 20px;}
+  .nav-links{display:none;}
+  .hero{grid-template-columns:1fr; height:auto;}
+  .hero-left{padding:80px 24px 56px;}
+  .hero-right{height:50vw; min-height:260px;}
+  .hero-stats{display:none;}
+  .cats-sec,.feat-sec,.why-sec,.rev-sec,.contact-sec,footer{padding-left:20px!important;padding-right:20px!important;}
+  .cats-grid{grid-template-columns:1fr 1fr;grid-template-rows:auto;}
+  .cat-cell:first-child{grid-row:span 1;}
+  .why-inner,.contact-inner{grid-template-columns:1fr;}
+  .rev-grid{grid-template-columns:1fr;}
+  .cta-band{margin:0 20px 60px;padding:48px 24px;}
+  .strip{padding:0 20px;}
+  .feat-hdr{padding:0 20px 36px;}
+  .form-row2{grid-template-columns:1fr;}
+  .ft-cols{gap:28px;}
+}
+</style>
+</head>
+<body>
+
+<!-- MARQUEE -->
+<div class="mbar">
+  <div class="mtrack">
+    <span>New Collection Dropped</span><span class="dot">✦</span>
+    <span>Free Delivery Above Rs.2000</span><span class="dot">✦</span>
+    <span>UrbanWear — Wear the Streets</span><span class="dot">✦</span>
+    <span>Premium Street Clothing</span><span class="dot">✦</span>
+    <span>Custom Orders Available</span><span class="dot">✦</span>
+    <span>New Collection Dropped</span><span class="dot">✦</span>
+    <span>Free Delivery Above Rs.2000</span><span class="dot">✦</span>
+    <span>UrbanWear — Wear the Streets</span><span class="dot">✦</span>
+    <span>Premium Street Clothing</span><span class="dot">✦</span>
+    <span>Custom Orders Available</span><span class="dot">✦</span>
+  </div>
+</div>
+
+<!-- STICKY NAV -->
+<div class="nav-wrap">
+  <nav>
+    <a href="#" class="logo">Urban<em>Wear</em></a>
+    <div class="nav-links">
+      <a href="#cats">Collection</a>
+      <a href="#feat">Featured</a>
+      <a href="#why">About</a>
+      <a href="#contact">Contact</a>
+      <a href="#contact" class="nav-cta">Order Now</a>
+    </div>
+  </nav>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <p class="hero-eyebrow">2025 New Collection Live</p>
+    <h1 class="hero-title">
+      WEAR<br>
+      THE<br>
+      <span class="acc">STREETS</span>
+    </h1>
+    <p class="hero-desc">Bold fits. Clean cuts. Street-ready style. UrbanWear is built for those who move with attitude — premium clothing for the modern generation.</p>
+    <div class="hero-btns">
+      <a href="#cats" class="btn-fill">Shop Collection</a>
+      <a href="#contact" class="btn-ghost">Order Now</a>
+    </div>
+    <div class="hero-stats">
+      <div>
+        <div class="hstat-num">500<em>+</em></div>
+        <div class="hstat-lbl">Happy Customers</div>
+      </div>
+      <div>
+        <div class="hstat-num">50<em>+</em></div>
+        <div class="hstat-lbl">Designs</div>
+      </div>
+      <div>
+        <div class="hstat-num">100<em>%</em></div>
+        <div class="hstat-lbl">Original Quality</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <img class="hero-img"
+      src="https://images.unsplash.com/photo-1483985988355-763728e1935b?w=1200&auto=format&fit=crop&q=80"
+      alt="UrbanWear Hero"
+      onerror="this.style.display='none'">
+    <div class="hero-img-overlay"></div>
+    <div class="hero-badge">
+      <span class="b1">NEW DROP</span>
+      <span class="b2">Summer 2025</span>
+    </div>
+  </div>
+</section>
+
+<!-- CATEGORIES -->
+<section class="cats-sec" id="cats">
+  <div class="cats-hdr">
+    <div>
+      <p class="sec-ey">What We Offer</p>
+      <h2 class="sec-ttl">SHOP BY <span class="dim">CATEGORY</span></h2>
+    </div>
+    <a href="#contact" class="sec-lnk">View All →</a>
+  </div>
+  <div class="cats-grid">
+    <div class="cat-cell">
+      <img src="https://images.unsplash.com/photo-1556821840-3a63f15732ce?w=900&auto=format&fit=crop&q=80" alt="Hoodies" onerror="this.style.background='#1a1a1a'">
+      <div class="cat-ov">
+        <p class="cat-tag">Best Seller</p>
+        <div class="cat-nm">HOODIES &<br>OUTERWEAR</div>
+        <p class="cat-cnt">12+ Styles</p>
+      </div>
+    </div>
+    <div class="cat-cell">
+      <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=700&auto=format&fit=crop&q=80" alt="T-Shirts" onerror="this.style.background='#1a1a1a'">
+      <div class="cat-ov">
+        <p class="cat-tag">New Drop</p>
+        <div class="cat-nm">T-SHIRTS</div>
+        <p class="cat-cnt">20+ Designs</p>
+      </div>
+    </div>
+    <div class="cat-cell">
+      <img src="https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=700&auto=format&fit=crop&q=80" alt="Cargo" onerror="this.style.background='#1a1a1a'">
+      <div class="cat-ov">
+        <p class="cat-tag">Trending</p>
+        <div class="cat-nm">CARGO &<br>JOGGERS</div>
+        <p class="cat-cnt">8+ Fits</p>
+      </div>
+    </div>
+    <div class="cat-cell">
+      <img src="https://images.unsplash.com/photo-1551028719-00167b16eac5?w=700&auto=format&fit=crop&q=80" alt="Jackets" onerror="this.style.background='#1a1a1a'">
+      <div class="cat-ov">
+        <p class="cat-tag">Premium</p>
+        <div class="cat-nm">JACKETS</div>
+        <p class="cat-cnt">6+ Styles</p>
+      </div>
+    </div>
+    <div class="cat-cell">
+      <img src="https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?w=700&auto=format&fit=crop&q=80" alt="Polo" onerror="this.style.background='#1a1a1a'">
+      <div class="cat-ov">
+        <p class="cat-tag">Classic</p>
+        <div class="cat-nm">POLO &<br>SHIRTS</div>
+        <p class="cat-cnt">15+ Colors</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURED -->
+<section class="feat-sec" id="feat">
+  <div class="feat-hdr">
+    <div>
+      <p class="sec-ey">Hand Picked</p>
+      <h2 class="sec-ttl">FEATURED <span class="dim">PIECES</span></h2>
+    </div>
+    <a href="#contact" class="sec-lnk">Order Any →</a>
+  </div>
+  <div class="strip" id="strip">
+    <div class="pcard">
+      <img class="pcard-img" src="https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=600&auto=format&fit=crop&q=80" alt="Oversized Tee" onerror="this.style.background='#1e1e1e'">
+      <div class="pcard-body">
+        <p class="pcard-badge">New Arrival</p>
+        <p class="pcard-name">Urban Oversized Tee</p>
+        <p class="pcard-price">From <strong>Rs. 1,200</strong></p>
+      </div>
+    </div>
+    <div class="pcard">
+      <img class="pcard-img" src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&auto=format&fit=crop&q=80" alt="Cargo Jogger" onerror="this.style.background='#1e1e1e'">
+      <div class="pcard-body">
+        <p class="pcard-badge">Best Seller</p>
+        <p class="pcard-name">Street Cargo Jogger</p>
+        <p class="pcard-price">From <strong>Rs. 2,500</strong></p>
+      </div>
+    </div>
+    <div class="pcard">
+      <img class="pcard-img" src="https://images.unsplash.com/photo-1611312449408-fcece27cdbb7?w=600&auto=format&fit=crop&q=80" alt="Polo Shirt" onerror="this.style.background='#1e1e1e'">
+      <div class="pcard-body">
+        <p class="pcard-badge">Trending</p>
+        <p class="pcard-name">Classic Polo Shirt</p>
+        <p class="pcard-price">From <strong>Rs. 1,800</strong></p>
+      </div>
+    </div>
+    <div class="pcard">
+      <img class="pcard-img" src="https://images.unsplash.com/photo-1509631179647-0177331693ae?w=600&auto=format&fit=crop&q=80" alt="Graphic Hoodie" onerror="this.style.background='#1e1e1e'">
+      <div class="pcard-body">
+        <p class="pcard-badge">Limited Edition</p>
+        <p class="pcard-name">Graphic Hoodie</p>
+        <p class="pcard-price">From <strong>Rs. 3,200</strong></p>
+      </div>
+    </div>
+    <div class="pcard">
+      <img class="pcard-img" src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=600&auto=format&fit=crop&q=80" alt="Track Jacket" onerror="this.style.background='#1e1e1e'">
+      <div class="pcard-body">
+        <p class="pcard-badge">New Drop</p>
+        <p class="pcard-name">Zip-Up Track Jacket</p>
+        <p class="pcard-price">From <strong>Rs. 2,800</strong></p>
+      </div>
+    </div>
+    <div class="pcard">
+      <img class="pcard-img" src="https://images.unsplash.com/photo-1503341504253-dff4815485f1?w=600&auto=format&fit=crop&q=80" alt="Denim Jacket" onerror="this.style.background='#1e1e1e'">
+      <div class="pcard-body">
+        <p class="pcard-badge">Premium</p>
+        <p class="pcard-name">Denim Street Jacket</p>
+        <p class="pcard-price">From <strong>Rs. 3,800</strong></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY -->
+<section class="why-sec" id="why">
+  <div class="why-inner">
+    <div>
+      <p class="sec-ey">Why Choose Us</p>
+      <h2 class="sec-ttl">QUALITY<br><span class="dim">YOU CAN<br>FEEL</span></h2>
+      <br>
+      <p style="font-size:.88rem;color:var(--gray);line-height:1.75;max-width:360px;">UrbanWear is not just a brand — it's a statement. Every stitch, every cut, every fabric is chosen with one goal: to make you look and feel unstoppable.</p>
+    </div>
+    <div class="why-grid">
+      <div class="why-card"><div class="wicon">🪡</div><h4>Premium Fabric</h4><p>High-quality materials that last longer and feel better every wear.</p></div>
+      <div class="why-card"><div class="wicon">✂️</div><h4>Perfect Fit</h4><p>S to XXL available. Custom sizing on request.</p></div>
+      <div class="why-card"><div class="wicon">🚚</div><h4>Fast Delivery</h4><p>Nationwide. Dispatched within 24–48 hours.</p></div>
+      <div class="why-card"><div class="wicon">💯</div><h4>Satisfaction</h4><p>Not happy? We fix it. Quality is our promise.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section class="rev-sec">
+  <div class="rev-hdr">
+    <p class="sec-ey">Real Reviews</p>
+    <h2 class="sec-ttl">WHAT PEOPLE <span class="dim">SAY</span></h2>
+  </div>
+  <div class="rev-grid">
+    <div class="rcard">
+      <div class="stars">★★★★★</div>
+      <p class="rtxt">"Best clothing brand in Pakistan! Quality is amazing and delivery was super fast. Already ordered 3 times!"</p>
+      <div class="rauthor"><div class="ravatar">A</div><div><p class="rname">Ahmed Raza</p><p class="rloc">Lahore</p></div></div>
+    </div>
+    <div class="rcard">
+      <div class="stars">★★★★★</div>
+      <p class="rtxt">"The hoodie I ordered is exactly what I wanted. Fabric is thick, stitching is clean. Worth every rupee!"</p>
+      <div class="rauthor"><div class="ravatar">U</div><div><p class="rname">Usman Ali</p><p class="rloc">Karachi</p></div></div>
+    </div>
+    <div class="rcard">
+      <div class="stars">★★★★★</div>
+      <p class="rtxt">"Ordered cargo joggers and I get compliments every time I wear them. UrbanWear is the real deal!"</p>
+      <div class="rauthor"><div class="ravatar">B</div><div><p class="rname">Bilal Khan</p><p class="rloc">Islamabad</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BAND -->
+<div class="cta-band">
+  <div>
+    <h2>WANT A WEBSITE<br>LIKE THIS?</h2>
+    <p>Professional websites for your brand — designed to get clients & go viral on TikTok & Facebook.</p>
+  </div>
+  <a href="https://wa.me/923267545060" target="_blank" class="btn-dark">Contact on WhatsApp →</a>
+</div>
+
+<!-- CONTACT -->
+<section class="contact-sec" id="contact">
+  <div class="contact-inner">
+    <div class="cl">
+      <p class="sec-ey">Place Your Order</p>
+      <h2 class="sec-ttl">ORDER <span class="dim">NOW</span></h2>
+      <p>Fill the form or contact us directly on WhatsApp. We'll confirm your order, size, and delivery details right away.</p>
+      <div class="cd"><div class="cdicon">📞</div><div class="cdbody"><strong>Phone / WhatsApp</strong><a href="tel:03XXXXXXXXX">Add Your Number</a></div></div>
+      <div class="cd"><div class="cdicon">🚚</div><div class="cdbody"><strong>Delivery</strong>Nationwide — All Cities of Pakistan</div></div>
+      <div class="cd"><div class="cdicon">⏰</div><div class="cdbody"><strong>Response Time</strong>Within 1 Hour — 9 AM to 11 PM Daily</div></div>
+      <br>
+      <a href="https://wa.me/92XXXXXXXXXX" class="wa-btn" target="_blank">💬 &nbsp;Order on WhatsApp</a>
+    </div>
+    <div>
+      <div class="form-row2">
+        <div class="fg"><label>Your Name</label><input type="text" placeholder="Muhammad Ali"></div>
+        <div class="fg"><label>Phone Number</label><input type="tel" placeholder="03XX-XXXXXXX"></div>
+      </div>
+      <div class="fg"><label>Product</label>
+        <select>
+          <option value="">Select Category</option>
+          <option>Hoodie / Outerwear</option>
+          <option>T-Shirt</option>
+          <option>Cargo / Jogger</option>
+          <option>Jacket</option>
+          <option>Polo / Shirt</option>
+          <option>Custom Order</option>
+        </select>
+      </div>
+      <div class="form-row2">
+        <div class="fg"><label>Size</label>
+          <select><option>S</option><option>M</option><option selected>L</option><option>XL</option><option>XXL</option></select>
+        </div>
+        <div class="fg"><label>City</label><input type="text" placeholder="Lahore"></div>
+      </div>
+      <div class="fg"><label>Message / Special Request</label><textarea rows="4" placeholder="Color preference, quantity, custom design..."></textarea></div>
+      <button class="btn-fill" style="width:100%;padding:15px;font-size:.82rem;" onclick="alert('Order received! We will contact you on WhatsApp shortly ✅')">Place Order →</button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="ft">
+    <div class="ft-brand">
+      <div class="ft-logo">Urban<em>Wear</em></div>
+      <p>Premium street clothing for the modern generation. Quality you can feel. Style you can own.</p>
+    </div>
+    <div class="ft-cols">
+      <div class="ft-col">
+        <h5>Shop</h5>
+        <a href="#cats">Hoodies</a><a href="#cats">T-Shirts</a><a href="#cats">Cargo & Joggers</a><a href="#cats">Jackets</a><a href="#cats">Polo & Shirts</a>
+      </div>
+      <div class="ft-col">
+        <h5>Info</h5>
+        <a href="#why">About Us</a><a href="#contact">Order Now</a><a href="#contact">Delivery Info</a><a href="#contact">Custom Orders</a>
+      </div>
+      <div class="ft-col">
+        <h5>Follow Us</h5>
+        <a href="#">TikTok</a><a href="#">Instagram</a><a href="#">Facebook</a><a href="#">WhatsApp</a>
+      </div>
+    </div>
+  </div>
+  <div class="ft-btm">
+    <p>© 2025 <strong>UrbanWear</strong>. All Rights Reserved. Made in Pakistan 🇵🇰</p>
+    <div class="socials">
+      <a href="#" class="soc">TT</a>
+      <a href="#" class="soc">IG</a>
+      <a href="#" class="soc">FB</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Drag scroll
+const s = document.getElementById('strip');
+let down=false, sx, sl;
+s.addEventListener('mousedown', e=>{down=true;sx=e.pageX-s.offsetLeft;sl=s.scrollLeft;});
+s.addEventListener('mouseleave',()=>down=false);
+s.addEventListener('mouseup',()=>down=false);
+s.addEventListener('mousemove',e=>{if(!down)return;e.preventDefault();s.scrollLeft=sl-(e.pageX-s.offsetLeft-sx)*1.5;});
+
+// Scroll animations
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='translateY(0)';}
+  });
+},{threshold:.08});
+document.querySelectorAll('.cat-cell,.why-card,.rcard,.pcard').forEach(el=>{
+  el.style.opacity='0';el.style.transform='translateY(28px)';
+  el.style.transition='opacity .5s ease, transform .5s ease';
+  obs.observe(el);
+});
+</script>
+</body>
+</html>
