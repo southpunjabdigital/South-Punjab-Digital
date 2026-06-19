@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SneakHub — Engineered Footwear</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --black:#0a0a0a;
+  --ink:#141414;
+  --card:#1a1a1a;
+  --line:#2a2a2a;
+  --bone:#e8e4db;
+  --paper:#f5f4f0;
+  --white:#ffffff;
+  --silver:#9b9b93;
+  --mute:#5c5c56;
+}
+html{scroll-behavior:smooth;}
+body{font-family:'Inter',sans-serif;background:var(--black);color:var(--paper);overflow-x:hidden;}
+::selection{background:var(--paper);color:var(--black);}
+.mono{font-family:'JetBrains Mono',monospace;}
+.disp{font-family:'Archivo Black',sans-serif;}
+
+/* tread pattern divider */
+.tread{
+  height:6px;width:100%;
+  background-image:repeating-linear-gradient(90deg,var(--line) 0 2px,transparent 2px 14px);
+  opacity:.6;
+}
+
+/* ===== NAV ===== */
+.nav-wrap{position:sticky;top:0;z-index:999;background:rgba(10,10,10,.94);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);}
+nav{display:flex;align-items:center;justify-content:space-between;padding:20px 56px;max-width:1500px;margin:0 auto;}
+.logo{font-family:'Archivo Black',sans-serif;font-size:1.5rem;letter-spacing:-.01em;color:var(--paper);text-decoration:none;}
+.nav-links{display:flex;gap:38px;align-items:center;}
+.nav-links a{font-size:.74rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--silver);text-decoration:none;transition:color .2s;}
+.nav-links a:hover{color:var(--paper);}
+.nav-icons{display:flex;align-items:center;gap:22px;}
+.hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px;}
+.hamburger span{width:22px;height:2px;background:var(--paper);transition:all .25s;}
+.hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+.hamburger.open span:nth-child(2){opacity:0;}
+.hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+
+.mobile-menu{position:fixed;top:0;right:0;bottom:0;width:300px;max-width:85vw;background:var(--black);border-left:1px solid var(--line);z-index:1100;transform:translateX(100%);transition:transform .35s cubic-bezier(.16,1,.3,1);padding:90px 32px 32px;display:flex;flex-direction:column;gap:6px;}
+.mobile-menu.open{transform:translateX(0);}
+.mobile-menu a{font-family:'Archivo Black',sans-serif;font-size:1.3rem;color:var(--paper);text-decoration:none;padding:14px 0;border-bottom:1px solid var(--line);}
+.mobile-menu .mm-wa{margin-top:20px;background:#25D366;color:#fff;text-align:center;border-radius:4px;border:none;font-family:'Inter',sans-serif;font-size:.85rem;font-weight:700;letter-spacing:.05em;}
+.mobile-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:1099;opacity:0;pointer-events:none;transition:opacity .3s;}
+.mobile-overlay.open{opacity:1;pointer-events:all;}
+
+/* Floating WhatsApp button */
+.wa-float{position:fixed;bottom:24px;left:24px;z-index:1500;width:42px;height:42px;background:#25D366;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.15rem;text-decoration:none;box-shadow:0 6px 20px rgba(37,211,102,.4);transition:transform .2s;}
+.wa-float:hover{transform:scale(1.08);}
+.wa-float::after{content:'';position:absolute;width:42px;height:42px;border-radius:50%;border:2px solid #25D366;animation:wa-pulse 2s ease-out infinite;}
+@keyframes wa-pulse{0%{transform:scale(1);opacity:.7;}100%{transform:scale(1.6);opacity:0;}}
+.icon-btn{position:relative;background:none;border:none;color:var(--paper);cursor:pointer;font-size:1.1rem;display:flex;}
+.cart-count{position:absolute;top:-7px;right:-9px;width:17px;height:17px;background:var(--paper);color:var(--black);border-radius:50%;font-size:.6rem;font-weight:800;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;}
+
+/* ===== HERO ===== */
+.hero{min-height:100vh;display:grid;grid-template-columns:1.1fr .9fr;position:relative;overflow:hidden;border-bottom:1px solid var(--line);}
+.hero-bg-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:64px 64px;pointer-events:none;}
+.hero-left{display:flex;flex-direction:column;justify-content:center;padding:0 56px;position:relative;z-index:2;}
+.hero-tag{display:inline-flex;align-items:center;gap:10px;font-size:.68rem;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:var(--silver);margin-bottom:28px;}
+.hero-tag::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--paper);animation:blink 2s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+.hero-title{font-family:'Archivo Black',sans-serif;font-size:clamp(3.6rem,7.2vw,7.2rem);line-height:.86;letter-spacing:-.02em;color:var(--paper);margin-bottom:8px;}
+.hero-title .ol{-webkit-text-stroke:1.5px var(--paper);color:transparent;}
+.hero-sub{font-size:.92rem;font-weight:300;line-height:1.75;color:var(--silver);max-width:380px;margin:28px 0 40px;}
+.hero-actions{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:56px;}
+.btn-primary{background:var(--paper);color:var(--black);padding:16px 38px;border-radius:2px;font-size:.78rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;border:none;cursor:pointer;transition:background .2s,transform .15s;display:inline-block;}
+.btn-primary:hover{background:#fff;transform:translateY(-2px);}
+.btn-outline{border:1.5px solid var(--line);color:var(--paper);padding:14px 36px;border-radius:2px;font-size:.78rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;background:transparent;cursor:pointer;transition:all .2s;display:inline-block;}
+.btn-outline:hover{border-color:var(--paper);}
+.hero-meta{display:flex;gap:44px;padding-top:32px;border-top:1px solid var(--line);}
+.hm-num{font-family:'Archivo Black',sans-serif;font-size:1.8rem;color:var(--paper);}
+.hm-lbl{font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--mute);margin-top:4px;}
+
+.hero-right{position:relative;display:flex;align-items:center;justify-content:center;background:linear-gradient(160deg,#141414 0%,#0a0a0a 100%);}
+.shoe-stage{position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center;}
+.shoe-ring{position:absolute;width:520px;height:520px;border:1px solid var(--line);border-radius:50%;}
+.shoe-ring.r2{width:680px;height:680px;opacity:.5;}
+.shoe-emoji-wrap{position:relative;z-index:3;font-size:13rem;filter:drop-shadow(0 40px 60px rgba(0,0,0,.6)) grayscale(1) contrast(1.3);transform:rotate(-12deg);animation:floaty 5s ease-in-out infinite;}
+@keyframes floaty{0%,100%{transform:rotate(-12deg) translateY(0)}50%{transform:rotate(-8deg) translateY(-18px)}}
+.price-float{position:absolute;bottom:60px;left:50%;transform:translateX(-50%);background:var(--paper);color:var(--black);padding:14px 26px;border-radius:2px;display:flex;align-items:center;gap:14px;z-index:4;}
+.pf-name{font-size:.7rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;}
+.pf-price{font-family:'JetBrains Mono',monospace;font-size:.85rem;font-weight:700;}
+
+/* ===== MARQUEE STRIP ===== */
+.strip-marquee{background:var(--paper);padding:14px 0;overflow:hidden;white-space:nowrap;border-bottom:1px solid var(--line);}
+.strip-track{display:inline-flex;animation:scroll-left 24s linear infinite;}
+.strip-track span{font-family:'Archivo Black',sans-serif;font-size:1rem;color:var(--black);padding:0 28px;letter-spacing:.02em;}
+.strip-track span.x{color:var(--mute);font-size:.8rem;}
+@keyframes scroll-left{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ===== SECTION COMMON ===== */
+section{padding:120px 56px;}
+.sec-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:56px;flex-wrap:wrap;gap:18px;}
+.sec-idx{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--mute);letter-spacing:.1em;margin-bottom:14px;}
+.sec-title{font-family:'Archivo Black',sans-serif;font-size:clamp(2.4rem,4.6vw,4rem);line-height:.92;letter-spacing:-.01em;color:var(--paper);}
+.sec-title .o{-webkit-text-stroke:1.2px var(--paper);color:transparent;}
+.sec-link{font-size:.74rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--paper);text-decoration:none;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--paper);padding-bottom:4px;transition:opacity .2s;}
+.sec-link:hover{opacity:.6;}
+
+/* ===== CATEGORIES ===== */
+.cat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);}
+.cat-item{background:var(--black);padding:48px 32px;cursor:pointer;transition:background .25s;position:relative;}
+.cat-item:hover{background:var(--ink);}
+.cat-num{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--mute);margin-bottom:32px;}
+.cat-icon{font-size:2.6rem;margin-bottom:20px;filter:grayscale(1);transition:transform .3s;}
+.cat-item:hover .cat-icon{transform:translateY(-6px);}
+.cat-name{font-family:'Archivo Black',sans-serif;font-size:1.3rem;color:var(--paper);margin-bottom:6px;}
+.cat-count{font-size:.74rem;color:var(--mute);}
+.cat-arrow{position:absolute;top:48px;right:32px;font-size:1.2rem;color:var(--mute);transition:transform .25s,color .25s;}
+.cat-item:hover .cat-arrow{transform:translate(4px,-4px);color:var(--paper);}
+
+/* ===== PRODUCT GRID (FEATURED) ===== */
+.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);}
+.pcard{background:var(--black);padding:0;position:relative;overflow:hidden;transition:background .3s;}
+.pcard:hover{background:var(--ink);}
+.pcard-top{display:flex;justify-content:space-between;align-items:flex-start;padding:22px 24px 0;}
+.pcard-badge{font-family:'JetBrains Mono',monospace;font-size:.62rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--black);background:var(--paper);padding:5px 10px;border-radius:2px;}
+.pcard-badge.alt{background:transparent;color:var(--silver);border:1px solid var(--line);}
+.pcard-wish{background:none;border:none;color:var(--mute);font-size:1.1rem;cursor:pointer;transition:color .2s;}
+.pcard-wish:hover{color:var(--paper);}
+.pcard-img-wrap{display:flex;align-items:center;justify-content:center;height:280px;position:relative;}
+.pcard-emoji{font-size:7rem;filter:grayscale(1) contrast(1.2);transition:transform .4s;}
+.pcard:hover .pcard-emoji{transform:scale(1.08) rotate(-5deg);}
+.pcard-body{padding:0 24px 26px;}
+.pcard-cat{font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);margin-bottom:6px;}
+.pcard-name{font-family:'Archivo Black',sans-serif;font-size:1.15rem;color:var(--paper);margin-bottom:14px;line-height:1.2;}
+.pcard-foot{display:flex;justify-content:space-between;align-items:center;}
+.pcard-price{font-family:'JetBrains Mono',monospace;font-size:1rem;font-weight:700;color:var(--paper);}
+.pcard-price .old{text-decoration:line-through;color:var(--mute);font-size:.8rem;margin-right:8px;font-weight:400;}
+.add-btn{width:38px;height:38px;background:var(--paper);color:var(--black);border:none;border-radius:50%;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .2s,background .2s;}
+.add-btn:hover{transform:scale(1.1);background:#fff;}
+
+/* ===== BEST SELLERS - horizontal scroll ===== */
+.bs-sec{padding:120px 0;}
+.bs-head{padding:0 56px;margin-bottom:56px;}
+.bs-strip{display:flex;gap:1px;background:var(--line);overflow-x:auto;scrollbar-width:none;padding:0 56px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
+.bs-strip::-webkit-scrollbar{display:none;}
+.bs-card{flex-shrink:0;width:260px;background:var(--black);padding:28px 22px;transition:background .25s;}
+.bs-card:hover{background:var(--ink);}
+.bs-rank{font-family:'Archivo Black',sans-serif;font-size:2.6rem;color:var(--line);line-height:1;margin-bottom:18px;-webkit-text-stroke:1px var(--mute);color:transparent;}
+.bs-emoji{font-size:4.5rem;filter:grayscale(1);text-align:center;margin:16px 0;display:block;}
+.bs-name{font-family:'Archivo Black',sans-serif;font-size:.98rem;color:var(--paper);margin-bottom:6px;}
+.bs-sold{font-size:.68rem;color:var(--mute);margin-bottom:14px;}
+.bs-price{font-family:'JetBrains Mono',monospace;font-size:.92rem;font-weight:700;color:var(--paper);}
+
+/* ===== LIMITED EDITION ===== */
+.limited{background:var(--paper);color:var(--black);padding:130px 56px;position:relative;overflow:hidden;}
+.limited::before{content:'LTD';position:absolute;top:50%;left:-40px;transform:translateY(-50%);font-family:'Archivo Black',sans-serif;font-size:24rem;color:rgba(0,0,0,.03);line-height:1;pointer-events:none;}
+.limited-inner{position:relative;z-index:2;max-width:1400px;margin:0 auto;}
+.limited-head{text-align:center;margin-bottom:64px;}
+.limited-head .sec-idx{color:var(--mute);justify-content:center;display:flex;}
+.limited-head .sec-title{color:var(--black);}
+.limited-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:1px;background:#ccc8bd;border:1px solid #ccc8bd;}
+.ltd-feature{background:var(--paper);padding:56px;display:flex;flex-direction:column;justify-content:center;}
+.ltd-tag{font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:700;letter-spacing:.1em;color:var(--mute);margin-bottom:18px;}
+.ltd-name{font-family:'Archivo Black',sans-serif;font-size:2.6rem;line-height:.95;margin-bottom:18px;}
+.ltd-desc{font-size:.9rem;color:#444;line-height:1.7;max-width:380px;margin-bottom:32px;}
+.ltd-emoji-big{font-size:9rem;text-align:center;margin:12px 0 28px;filter:grayscale(1) contrast(1.2);}
+.ltd-stock{display:flex;align-items:center;gap:10px;margin-bottom:28px;}
+.stock-bar{flex:1;height:4px;background:#ddd8cb;border-radius:2px;overflow:hidden;}
+.stock-fill{width:18%;height:100%;background:var(--black);}
+.stock-txt{font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:700;white-space:nowrap;}
+.ltd-side{background:var(--black);color:var(--paper);display:flex;flex-direction:column;}
+.ltd-row{padding:32px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;transition:background .2s;cursor:pointer;}
+.ltd-row:last-child{border-bottom:none;}
+.ltd-row:hover{background:var(--ink);}
+.ltd-row-name{font-family:'Archivo Black',sans-serif;font-size:1rem;}
+.ltd-row-sub{font-size:.68rem;color:var(--mute);margin-top:3px;}
+.ltd-row-price{font-family:'JetBrains Mono',monospace;font-size:.9rem;}
+
+/* ===== REVIEWS ===== */
+.rev-sec{padding:120px 56px;}
+.rev-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);}
+.rcard{background:var(--black);padding:36px 30px;transition:background .25s;}
+.rcard:hover{background:var(--ink);}
+.rstars{font-size:.85rem;letter-spacing:2px;color:var(--paper);margin-bottom:20px;}
+.rtext{font-size:.88rem;line-height:1.75;color:var(--silver);margin-bottom:28px;min-height:80px;}
+.rauthor{display:flex;align-items:center;gap:12px;padding-top:20px;border-top:1px solid var(--line);}
+.ravatar{width:38px;height:38px;border-radius:50%;background:var(--paper);color:var(--black);display:flex;align-items:center;justify-content:center;font-family:'Archivo Black',sans-serif;font-size:.9rem;flex-shrink:0;}
+.rname{font-size:.8rem;font-weight:700;color:var(--paper);}
+.rmeta{font-size:.66rem;color:var(--mute);margin-top:2px;}
+
+/* ===== NEWSLETTER / CTA ===== */
+.cta-sec{padding:0 56px 120px;}
+.cta-box{border:1px solid var(--line);padding:80px 56px;text-align:center;position:relative;overflow:hidden;}
+.cta-box .sec-title{margin-bottom:16px;}
+.cta-box p{font-size:.9rem;color:var(--silver);max-width:420px;margin:0 auto 36px;}
+.cta-form{display:flex;gap:0;max-width:420px;margin:0 auto;border:1px solid var(--line);}
+.cta-form input{flex:1;background:transparent;border:none;padding:16px 20px;color:var(--paper);font-family:'Inter',sans-serif;font-size:.85rem;outline:none;}
+.cta-form button{background:var(--paper);color:var(--black);border:none;padding:16px 28px;font-size:.74rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:background .2s;}
+.cta-form button:hover{background:#fff;}
+
+/* ===== FOOTER ===== */
+footer{background:var(--black);border-top:1px solid var(--line);padding:64px 56px 28px;}
+.ft-top{display:flex;justify-content:space-between;flex-wrap:wrap;gap:48px;margin-bottom:56px;}
+.ft-logo{font-family:'Archivo Black',sans-serif;font-size:1.7rem;color:var(--paper);margin-bottom:14px;}
+.ft-brand p{font-size:.82rem;color:var(--mute);line-height:1.7;max-width:280px;}
+.ft-cols{display:flex;gap:60px;flex-wrap:wrap;}
+.ft-col h5{font-family:'JetBrains Mono',monospace;font-size:.66rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--paper);margin-bottom:18px;}
+.ft-col a{display:block;font-size:.82rem;color:var(--mute);text-decoration:none;margin-bottom:11px;transition:color .2s;}
+.ft-col a:hover{color:var(--paper);}
+.ft-bottom{border-top:1px solid var(--line);padding-top:26px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}
+.ft-bottom p{font-size:.72rem;color:var(--mute);}
+.ft-socials{display:flex;gap:10px;}
+.fsoc{width:34px;height:34px;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--mute);text-decoration:none;font-size:.7rem;font-weight:700;font-family:'JetBrains Mono',monospace;transition:all .2s;}
+.fsoc:hover{border-color:var(--paper);color:var(--paper);}
+
+/* ===== CART DRAWER ===== */
+.cart-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:1001;opacity:0;pointer-events:none;transition:opacity .3s;}
+.cart-overlay.open{opacity:1;pointer-events:all;}
+.cart-drawer{position:fixed;top:0;right:0;bottom:0;width:420px;max-width:92vw;background:var(--black);border-left:1px solid var(--line);z-index:1002;transform:translateX(100%);transition:transform .35s cubic-bezier(.16,1,.3,1);display:flex;flex-direction:column;}
+.cart-drawer.open{transform:translateX(0);}
+.cart-head{padding:28px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;}
+.cart-head h3{font-family:'Archivo Black',sans-serif;font-size:1.3rem;}
+.cart-close{background:none;border:none;color:var(--paper);font-size:1.3rem;cursor:pointer;}
+.cart-items{flex:1;overflow-y:auto;padding:20px 28px;}
+.cart-item{display:flex;gap:16px;padding:18px 0;border-bottom:1px solid var(--line);align-items:center;}
+.ci-emoji{font-size:2.6rem;filter:grayscale(1);}
+.ci-info{flex:1;}
+.ci-name{font-family:'Archivo Black',sans-serif;font-size:.85rem;margin-bottom:4px;}
+.ci-size{font-size:.7rem;color:var(--mute);}
+.ci-price{font-family:'JetBrains Mono',monospace;font-size:.82rem;font-weight:700;}
+.cart-empty{text-align:center;padding:60px 20px;color:var(--mute);font-size:.85rem;}
+.cart-foot{padding:24px 28px;border-top:1px solid var(--line);}
+.cart-total{display:flex;justify-content:space-between;margin-bottom:18px;font-family:'JetBrains Mono',monospace;font-size:.95rem;font-weight:700;}
+.checkout-btn{width:100%;background:var(--paper);color:var(--black);border:none;padding:16px;font-size:.78rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border-radius:2px;}
+
+/* toast */
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--paper);color:var(--black);padding:14px 28px;border-radius:2px;font-size:.78rem;font-weight:700;z-index:2000;opacity:0;transition:all .3s;}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
+
+/* scroll reveal */
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .6s ease,transform .6s ease;}
+.reveal.in{opacity:1;transform:translateY(0);}
+
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;}}
+
+/* ===== MUSIC PLAYER ===== */
+.music-btn{position:fixed;bottom:28px;right:28px;z-index:1500;display:flex;align-items:center;gap:10px;background:rgba(20,20,20,.92);border:1px solid var(--paper);border-radius:50px;padding:10px 18px 10px 12px;cursor:pointer;backdrop-filter:blur(14px);box-shadow:0 8px 32px rgba(0,0,0,.5);transition:all .3s;user-select:none;}
+.music-btn:hover{background:rgba(40,40,40,.95);box-shadow:0 8px 40px rgba(0,0,0,.7);}
+.music-icon{width:36px;height:36px;border-radius:50%;background:var(--paper);color:var(--black);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;position:relative;transition:transform .2s;}
+.music-btn:hover .music-icon{transform:scale(1.08);}
+.music-btn.playing .music-icon::after{content:'';position:absolute;width:36px;height:36px;border-radius:50%;border:2px solid var(--paper);animation:pulse-ring 1.5s ease-out infinite;}
+@keyframes pulse-ring{0%{transform:scale(1);opacity:.8;}100%{transform:scale(2);opacity:0;}}
+.music-info{display:flex;flex-direction:column;}
+.music-title{font-size:.66rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--paper);}
+.music-sub{font-size:.6rem;color:var(--silver);margin-top:1px;}
+.eq{display:flex;align-items:flex-end;gap:2px;height:14px;margin-left:4px;}
+.eq span{width:3px;background:var(--paper);border-radius:2px;animation:eqbar .8s ease-in-out infinite alternate;}
+.eq span:nth-child(1){height:6px;animation-delay:0s;}
+.eq span:nth-child(2){height:12px;animation-delay:.15s;}
+.eq span:nth-child(3){height:8px;animation-delay:.3s;}
+.eq span:nth-child(4){height:14px;animation-delay:.1s;}
+@keyframes eqbar{from{transform:scaleY(.4);}to{transform:scaleY(1);}}
+.eq.paused span{animation-play-state:paused;}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:980px){
+  nav{padding:16px 22px;}
+  .nav-links{display:none;}
+  .hamburger{display:flex;}
+  .hero{grid-template-columns:1fr;}
+  .hero-left{padding:100px 24px 48px;}
+  .hero-right{height:60vw;min-height:320px;}
+  .shoe-emoji-wrap{font-size:7rem;}
+  .hero-meta{display:none;}
+  section,.bs-head,.limited,.cta-sec,footer{padding-left:22px!important;padding-right:22px!important;}
+  .cat-row{grid-template-columns:1fr 1fr;}
+  .feat-grid{grid-template-columns:1fr;}
+  .limited-grid{grid-template-columns:1fr;}
+  .rev-grid{grid-template-columns:1fr;}
+  .bs-strip{padding:0 22px;}
+  .ft-cols{gap:32px;}
+  .cart-drawer{width:100vw;max-width:100vw;}
+}
+</style>
+</head>
+<body>
+
+<!-- TOAST -->
+<div class="toast" id="toast">Added to cart</div>
+
+<!-- YOUTUBE AUDIO (hidden) -->
+<iframe id="ytAudio"
+  src="https://www.youtube.com/embed/KliEFgPTqP0?autoplay=1&loop=1&playlist=KliEFgPTqP0&controls=0&mute=0&enablejsapi=1"
+  allow="autoplay"
+  style="display:none;width:1px;height:1px;position:fixed;opacity:0;pointer-events:none;"
+  frameborder="0">
+</iframe>
+
+<!-- FLOATING MUSIC BUTTON -->
+<div class="music-btn playing" id="musicBtn" onclick="toggleMusic()">
+  <div class="music-icon">🎵</div>
+  <div class="music-info">
+    <span class="music-title">Now Playing</span>
+    <span class="music-sub" id="musicSub">Tap to mute</span>
+  </div>
+  <div class="eq" id="eq"><span></span><span></span><span></span><span></span></div>
+</div>
+
+<!-- FLOATING WHATSAPP BUTTON -->
+<a href="https://wa.me/923001234567?text=Hi%2C%20I%20want%20to%20order%20sneakers%20from%20SneakHub" target="_blank" class="wa-float">💬</a>
+
+<!-- CART OVERLAY + DRAWER -->
+<div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-head">
+    <h3>Cart (<span id="cartCount">0</span>)</h3>
+    <button class="cart-close" onclick="closeCart()">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems">
+    <div class="cart-empty">Your cart is empty.<br>Start adding sneakers.</div>
+  </div>
+  <div class="cart-foot">
+    <div class="cart-total"><span>Total</span><span class="mono" id="cartTotal">$0</span></div>
+    <button class="checkout-btn" onclick="checkoutWhatsApp()">Checkout via WhatsApp →</button>
+  </div>
+</div>
+
+<!-- MOBILE MENU OVERLAY + DRAWER -->
+<div class="mobile-overlay" id="mobileOverlay" onclick="closeMobileMenu()"></div>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#categories" onclick="closeMobileMenu()">Categories</a>
+  <a href="#featured" onclick="closeMobileMenu()">Featured</a>
+  <a href="#bestsellers" onclick="closeMobileMenu()">Best Sellers</a>
+  <a href="#limited" onclick="closeMobileMenu()">Limited</a>
+  <a href="#reviews" onclick="closeMobileMenu()">Reviews</a>
+  <a href="https://wa.me/923001234567?text=Hi%2C%20I%20want%20to%20order%20sneakers%20from%20SneakHub" target="_blank" class="mm-wa">💬 Order on WhatsApp</a>
+</div>
+
+<!-- NAV -->
+<div class="nav-wrap">
+  <nav>
+    <a href="#" class="logo">SNEAK<span style="-webkit-text-stroke:1.3px #f5f4f0;color:transparent;">HUB</span></a>
+    <div class="nav-links">
+      <a href="#categories">Categories</a>
+      <a href="#featured">Featured</a>
+      <a href="#bestsellers">Best Sellers</a>
+      <a href="#limited">Limited</a>
+      <a href="#reviews">Reviews</a>
+    </div>
+    <div class="nav-icons">
+      <button class="icon-btn">🔍</button>
+      <button class="icon-btn" onclick="openCart()">
+        🛍️<span class="cart-count" id="cartBadge">0</span>
+      </button>
+      <button class="hamburger" id="hamburgerBtn" onclick="toggleMobileMenu()">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+</div>
+<div class="tread"></div>
+
+<!-- HERO -->
+<section class="hero" style="padding:0;">
+  <div class="hero-bg-grid"></div>
+  <div class="hero-left">
+    <p class="hero-tag">Fall / Winter Drop — Live Now</p>
+    <h1 class="hero-title">STEP<br>INTO<br><span class="ol">SOMETHING</span></h1>
+    <p class="hero-sub">Engineered silhouettes. Premium materials. SneakHub curates the sneakers that define the culture — drop after drop.</p>
+    <div class="hero-actions">
+      <a href="#featured" class="btn-primary">Shop The Drop</a>
+      <a href="#limited" class="btn-outline">Limited Releases</a>
+    </div>
+    <div class="hero-meta">
+      <div><div class="hm-num">230+</div><div class="hm-lbl">Silhouettes</div></div>
+      <div><div class="hm-num">48H</div><div class="hm-lbl">Fast Shipping</div></div>
+      <div><div class="hm-num">100%</div><div class="hm-lbl">Authenticated</div></div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="shoe-stage">
+      <div class="shoe-ring"></div>
+      <div class="shoe-ring r2"></div>
+      <div class="shoe-emoji-wrap">👟</div>
+      <div class="price-float">
+        <span class="pf-name">Air Phantom 01</span>
+        <span class="pf-price mono">$189</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE STRIP -->
+<div class="strip-marquee">
+  <div class="strip-track">
+    <span>NEW DROPS WEEKLY</span><span class="x">/</span>
+    <span>FREE SHIPPING OVER $150</span><span class="x">/</span>
+    <span>AUTHENTICITY GUARANTEED</span><span class="x">/</span>
+    <span>SNEAKHUB</span><span class="x">/</span>
+    <span>NEW DROPS WEEKLY</span><span class="x">/</span>
+    <span>FREE SHIPPING OVER $150</span><span class="x">/</span>
+    <span>AUTHENTICITY GUARANTEED</span><span class="x">/</span>
+    <span>SNEAKHUB</span><span class="x">/</span>
+  </div>
+</div>
+
+<!-- CATEGORIES -->
+<section id="categories">
+  <div class="sec-head reveal">
+    <div>
+      <p class="sec-idx">// 01 — BROWSE</p>
+      <h2 class="sec-title">SHOP BY <span class="o">CATEGORY</span></h2>
+    </div>
+    <a href="#featured" class="sec-link">View All →</a>
+  </div>
+  <div class="cat-row reveal">
+    <div class="cat-item">
+      <span class="cat-arrow">↗</span>
+      <div class="cat-num mono">001</div>
+      <div class="cat-icon">🏃</div>
+      <div class="cat-name">Running</div>
+      <div class="cat-count">64 Styles</div>
+    </div>
+    <div class="cat-item">
+      <span class="cat-arrow">↗</span>
+      <div class="cat-num mono">002</div>
+      <div class="cat-icon">🏀</div>
+      <div class="cat-name">Basketball</div>
+      <div class="cat-count">41 Styles</div>
+    </div>
+    <div class="cat-item">
+      <span class="cat-arrow">↗</span>
+      <div class="cat-num mono">003</div>
+      <div class="cat-icon">👟</div>
+      <div class="cat-name">Lifestyle</div>
+      <div class="cat-count">88 Styles</div>
+    </div>
+    <div class="cat-item">
+      <span class="cat-arrow">↗</span>
+      <div class="cat-num mono">004</div>
+      <div class="cat-icon">🥾</div>
+      <div class="cat-name">Trail & Boots</div>
+      <div class="cat-count">37 Styles</div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURED PRODUCTS -->
+<section id="featured">
+  <div class="sec-head reveal">
+    <div>
+      <p class="sec-idx">// 02 — CURATED</p>
+      <h2 class="sec-title">FEATURED <span class="o">PRODUCTS</span></h2>
+    </div>
+    <a href="#bestsellers" class="sec-link">See Best Sellers →</a>
+  </div>
+  <div class="feat-grid reveal">
+    <div class="pcard">
+      <div class="pcard-top">
+        <span class="pcard-badge">New</span>
+        <button class="pcard-wish">♡</button>
+      </div>
+      <div class="pcard-img-wrap"><span class="pcard-emoji">👟</span></div>
+      <div class="pcard-body">
+        <p class="pcard-cat">Lifestyle</p>
+        <p class="pcard-name">Air Phantom 01</p>
+        <div class="pcard-foot">
+          <span class="pcard-price mono">$189</span>
+          <button class="add-btn" onclick="addToCart('Air Phantom 01',189,'👟')">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="pcard">
+      <div class="pcard-top">
+        <span class="pcard-badge alt">Restock</span>
+        <button class="pcard-wish">♡</button>
+      </div>
+      <div class="pcard-img-wrap"><span class="pcard-emoji">👞</span></div>
+      <div class="pcard-body">
+        <p class="pcard-cat">Running</p>
+        <p class="pcard-name">Velocity Mono Knit</p>
+        <div class="pcard-foot">
+          <span class="pcard-price mono">$165</span>
+          <button class="add-btn" onclick="addToCart('Velocity Mono Knit',165,'👞')">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="pcard">
+      <div class="pcard-top">
+        <span class="pcard-badge">-20%</span>
+        <button class="pcard-wish">♡</button>
+      </div>
+      <div class="pcard-img-wrap"><span class="pcard-emoji">🥾</span></div>
+      <div class="pcard-body">
+        <p class="pcard-cat">Trail</p>
+        <p class="pcard-name">Ridgeline GTX</p>
+        <div class="pcard-foot">
+          <span class="pcard-price mono"><span class="old">$220</span>$176</span>
+          <button class="add-btn" onclick="addToCart('Ridgeline GTX',176,'🥾')">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="pcard">
+      <div class="pcard-top">
+        <span class="pcard-badge alt">Trending</span>
+        <button class="pcard-wish">♡</button>
+      </div>
+      <div class="pcard-img-wrap"><span class="pcard-emoji">👟</span></div>
+      <div class="pcard-body">
+        <p class="pcard-cat">Basketball</p>
+        <p class="pcard-name">Crossover High</p>
+        <div class="pcard-foot">
+          <span class="pcard-price mono">$210</span>
+          <button class="add-btn" onclick="addToCart('Crossover High',210,'👟')">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="pcard">
+      <div class="pcard-top">
+        <span class="pcard-badge">New</span>
+        <button class="pcard-wish">♡</button>
+      </div>
+      <div class="pcard-img-wrap"><span class="pcard-emoji">👞</span></div>
+      <div class="pcard-body">
+        <p class="pcard-cat">Lifestyle</p>
+        <p class="pcard-name">Court Classic '86</p>
+        <div class="pcard-foot">
+          <span class="pcard-price mono">$140</span>
+          <button class="add-btn" onclick="addToCart('Court Classic 86',140,'👞')">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="pcard">
+      <div class="pcard-top">
+        <span class="pcard-badge alt">Limited</span>
+        <button class="pcard-wish">♡</button>
+      </div>
+      <div class="pcard-img-wrap"><span class="pcard-emoji">👟</span></div>
+      <div class="pcard-body">
+        <p class="pcard-cat">Running</p>
+        <p class="pcard-name">Nimbus Carbon Pro</p>
+        <div class="pcard-foot">
+          <span class="pcard-price mono">$245</span>
+          <button class="add-btn" onclick="addToCart('Nimbus Carbon Pro',245,'👟')">+</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BEST SELLERS -->
+<section class="bs-sec" id="bestsellers">
+  <div class="bs-head sec-head reveal">
+    <div>
+      <p class="sec-idx">// 03 — RANKED BY SALES</p>
+      <h2 class="sec-title">BEST <span class="o">SELLERS</span></h2>
+    </div>
+    <a href="#" class="sec-link">Full Chart →</a>
+  </div>
+  <div class="bs-strip reveal">
+    <div class="bs-card">
+      <div class="bs-rank">01</div>
+      <span class="bs-emoji">👟</span>
+      <p class="bs-name">Air Phantom 01</p>
+      <p class="bs-sold">2,840 sold this month</p>
+      <p class="bs-price mono">$189</p>
+    </div>
+    <div class="bs-card">
+      <div class="bs-rank">02</div>
+      <span class="bs-emoji">👞</span>
+      <p class="bs-name">Court Classic '86</p>
+      <p class="bs-sold">2,310 sold this month</p>
+      <p class="bs-price mono">$140</p>
+    </div>
+    <div class="bs-card">
+      <div class="bs-rank">03</div>
+      <span class="bs-emoji">👟</span>
+      <p class="bs-name">Crossover High</p>
+      <p class="bs-sold">1,980 sold this month</p>
+      <p class="bs-price mono">$210</p>
+    </div>
+    <div class="bs-card">
+      <div class="bs-rank">04</div>
+      <span class="bs-emoji">👞</span>
+      <p class="bs-name">Velocity Mono Knit</p>
+      <p class="bs-sold">1,640 sold this month</p>
+      <p class="bs-price mono">$165</p>
+    </div>
+    <div class="bs-card">
+      <div class="bs-rank">05</div>
+      <span class="bs-emoji">🥾</span>
+      <p class="bs-name">Ridgeline GTX</p>
+      <p class="bs-sold">1,205 sold this month</p>
+      <p class="bs-price mono">$220</p>
+    </div>
+    <div class="bs-card">
+      <div class="bs-rank">06</div>
+      <span class="bs-emoji">👟</span>
+      <p class="bs-name">Nimbus Carbon Pro</p>
+      <p class="bs-sold">980 sold this month</p>
+      <p class="bs-price mono">$245</p>
+    </div>
+  </div>
+</section>
+
+<!-- LIMITED EDITION -->
+<section class="limited" id="limited">
+  <div class="limited-inner">
+    <div class="limited-head reveal">
+      <p class="sec-idx mono">// 04 — RARE DROPS</p>
+      <h2 class="sec-title">LIMITED <span style="-webkit-text-stroke:1.2px #0a0a0a;color:transparent;">EDITION</span></h2>
+    </div>
+    <div class="limited-grid reveal">
+      <div class="ltd-feature">
+        <p class="ltd-tag mono">DROP NO. 014 — ONLY 80 PAIRS</p>
+        <h3 class="ltd-name">Obsidian<br>Reactor</h3>
+        <div class="ltd-emoji-big">🖤👟</div>
+        <p class="ltd-desc">Hand-finished upper, reactive foam sole, individually numbered. Once these are gone, they're gone for good.</p>
+        <div class="ltd-stock">
+          <div class="stock-bar"><div class="stock-fill"></div></div>
+          <span class="stock-txt mono">14 / 80 LEFT</span>
+        </div>
+        <a href="#" class="btn-primary" style="width:fit-content;" onclick="addToCart('Obsidian Reactor',340,'🖤');return false;">Reserve Pair — $340</a>
+      </div>
+      <div class="ltd-side">
+        <div class="ltd-row" onclick="addToCart('Glacier Edition',310,'🤍')">
+          <div>
+            <div class="ltd-row-name">Glacier Edition</div>
+            <div class="ltd-row-sub">32 / 120 left</div>
+          </div>
+          <span class="ltd-row-price mono">$310</span>
+        </div>
+        <div class="ltd-row" onclick="addToCart('Midnight Collab',390,'⚫')">
+          <div>
+            <div class="ltd-row-name">Midnight Collab</div>
+            <div class="ltd-row-sub">9 / 50 left</div>
+          </div>
+          <span class="ltd-row-price mono">$390</span>
+        </div>
+        <div class="ltd-row" onclick="addToCart('Heritage Remaster',265,'⚪')">
+          <div>
+            <div class="ltd-row-name">Heritage Remaster</div>
+            <div class="ltd-row-sub">61 / 200 left</div>
+          </div>
+          <span class="ltd-row-price mono">$265</span>
+        </div>
+        <div class="ltd-row" onclick="addToCart('Studio Noir',355,'🔘')">
+          <div>
+            <div class="ltd-row-name">Studio Noir</div>
+            <div class="ltd-row-sub">3 / 30 left</div>
+          </div>
+          <span class="ltd-row-price mono">$355</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section class="rev-sec" id="reviews">
+  <div class="sec-head reveal">
+    <div>
+      <p class="sec-idx">// 05 — VERIFIED BUYERS</p>
+      <h2 class="sec-title">CUSTOMER <span class="o">REVIEWS</span></h2>
+    </div>
+  </div>
+  <div class="rev-grid reveal">
+    <div class="rcard">
+      <div class="rstars">★★★★★</div>
+      <p class="rtext">"Packaging alone felt premium. The Air Phantom fits true to size and the comfort is unreal for an all-day shoe."</p>
+      <div class="rauthor">
+        <div class="ravatar">J</div>
+        <div><p class="rname">James Carter</p><p class="rmeta">Verified Purchase — Air Phantom 01</p></div>
+      </div>
+    </div>
+    <div class="rcard">
+      <div class="rstars">★★★★★</div>
+      <p class="rtext">"Copped the Obsidian Reactor on drop day. Numbered box, certificate, the whole deal. Worth every cent."</p>
+      <div class="rauthor">
+        <div class="ravatar">M</div>
+        <div><p class="rname">Maya Chen</p><p class="rmeta">Verified Purchase — Obsidian Reactor</p></div>
+      </div>
+    </div>
+    <div class="rcard">
+      <div class="rstars">★★★★★</div>
+      <p class="rtext">"Fast shipping, real product, zero issues. SneakHub has become my only spot for new releases now."</p>
+      <div class="rauthor">
+        <div class="ravatar">D</div>
+        <div><p class="rname">Daniel Osei</p><p class="rmeta">Verified Purchase — Crossover High</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NEWSLETTER CTA -->
+<section class="cta-sec">
+  <div class="cta-box reveal">
+    <p class="sec-idx" style="justify-content:center;display:flex;">// STAY FIRST IN LINE</p>
+    <h2 class="sec-title">NEVER MISS<br>A <span class="o">DROP</span></h2>
+    <p>Get early access to limited releases before they go public.</p>
+    <div class="cta-form">
+      <input type="email" placeholder="your@email.com">
+      <button onclick="alert('Subscribed — you will be notified of the next drop.')">Notify Me</button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="ft-top">
+    <div class="ft-brand">
+      <div class="ft-logo">SNEAKHUB</div>
+      <p>Engineered footwear for those who move with intention. Authenticated. Curated. Delivered fast.</p>
+    </div>
+    <div class="ft-cols">
+      <div class="ft-col">
+        <h5>Shop</h5>
+        <a href="#categories">Running</a>
+        <a href="#categories">Basketball</a>
+        <a href="#categories">Lifestyle</a>
+        <a href="#limited">Limited Edition</a>
+      </div>
+      <div class="ft-col">
+        <h5>Support</h5>
+        <a href="#">Size Guide</a>
+        <a href="#">Shipping</a>
+        <a href="#">Returns</a>
+        <a href="#">Contact</a>
+      </div>
+      <div class="ft-col">
+        <h5>Follow</h5>
+        <a href="#">Instagram</a>
+        <a href="#">TikTok</a>
+        <a href="#">Twitter / X</a>
+      </div>
+    </div>
+  </div>
+  <div class="ft-bottom">
+    <p>© 2026 SneakHub. All rights reserved.</p>
+    <div class="ft-socials">
+      <a href="#" class="fsoc">IG</a>
+      <a href="#" class="fsoc">TT</a>
+      <a href="#" class="fsoc">X</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ===== MOBILE MENU =====
+function toggleMobileMenu(){
+  document.getElementById('mobileMenu').classList.toggle('open');
+  document.getElementById('mobileOverlay').classList.toggle('open');
+  document.getElementById('hamburgerBtn').classList.toggle('open');
+}
+function closeMobileMenu(){
+  document.getElementById('mobileMenu').classList.remove('open');
+  document.getElementById('mobileOverlay').classList.remove('open');
+  document.getElementById('hamburgerBtn').classList.remove('open');
+}
+
+// ===== WHATSAPP CHECKOUT =====
+function checkoutWhatsApp(){
+  if(cart.length === 0){
+    alert('Your cart is empty. Add a sneaker first.');
+    return;
+  }
+  let msg = "Hi! I'd like to order:%0A%0A";
+  let total = 0;
+  cart.forEach((item,i) => {
+    msg += `${i+1}. ${item.name} — $${item.price}%0A`;
+    total += item.price;
+  });
+  msg += `%0ATotal: $${total}%0A%0APlease confirm availability and delivery details.`;
+  window.open(`https://wa.me/923001234567?text=${msg}`, '_blank');
+}
+
+// ===== MUSIC TOGGLE =====
+let muted = false;
+function toggleMusic(){
+  const iframe = document.getElementById('ytAudio');
+  const btn = document.getElementById('musicBtn');
+  const sub = document.getElementById('musicSub');
+  const eq  = document.getElementById('eq');
+  muted = !muted;
+  if(muted){
+    iframe.src = 'https://www.youtube.com/embed/KliEFgPTqP0?autoplay=1&loop=1&playlist=KliEFgPTqP0&controls=0&mute=1&enablejsapi=1';
+    btn.classList.remove('playing');
+    sub.textContent = 'Tap to unmute';
+    eq.classList.add('paused');
+    document.querySelector('.music-icon').textContent = '🔇';
+  } else {
+    iframe.src = 'https://www.youtube.com/embed/KliEFgPTqP0?autoplay=1&loop=1&playlist=KliEFgPTqP0&controls=0&mute=0&enablejsapi=1';
+    btn.classList.add('playing');
+    sub.textContent = 'Tap to mute';
+    eq.classList.remove('paused');
+    document.querySelector('.music-icon').textContent = '🎵';
+  }
+}
+
+// ===== CART LOGIC =====
+let cart = [];
+function addToCart(name, price, emoji){
+  cart.push({name, price, emoji});
+  renderCart();
+  showToast(name + ' added to cart');
+  openCart();
+}
+function renderCart(){
+  const itemsEl = document.getElementById('cartItems');
+  const countEl = document.getElementById('cartCount');
+  const badgeEl = document.getElementById('cartBadge');
+  const totalEl = document.getElementById('cartTotal');
+  countEl.textContent = cart.length;
+  badgeEl.textContent = cart.length;
+  if(cart.length === 0){
+    itemsEl.innerHTML = '<div class="cart-empty">Your cart is empty.<br>Start adding sneakers.</div>';
+    totalEl.textContent = '$0';
+    return;
+  }
+  let total = 0;
+  itemsEl.innerHTML = cart.map((item,i) => {
+    total += item.price;
+    return `<div class="cart-item">
+      <span class="ci-emoji">${item.emoji}</span>
+      <div class="ci-info">
+        <div class="ci-name">${item.name}</div>
+        <div class="ci-size">Size US 9 · Qty 1</div>
+      </div>
+      <span class="ci-price mono">$${item.price}</span>
+    </div>`;
+  }).join('');
+  totalEl.textContent = '$' + total;
+}
+function openCart(){
+  document.getElementById('cartDrawer').classList.add('open');
+  document.getElementById('cartOverlay').classList.add('open');
+}
+function closeCart(){
+  document.getElementById('cartDrawer').classList.remove('open');
+  document.getElementById('cartOverlay').classList.remove('open');
+}
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2200);
+}
+
+// ===== SCROLL REVEAL =====
+const obs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('in'); });
+},{threshold:.1});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
