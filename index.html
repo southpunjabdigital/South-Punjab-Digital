@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GlowFit — See Yourself in Million Dollar Outfits</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#0B0A12;
+  --bg2:#120F1E;
+  --card:#171425;
+  --line:#2A2440;
+  --violet:#8B5CF6;
+  --magenta:#EC4899;
+  --cyan:#22D3EE;
+  --white:#F5F4FA;
+  --gray:#8B87A0;
+  --mute:#5A5670;
+}
+html{scroll-behavior:smooth;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--white);overflow-x:hidden;}
+::selection{background:var(--violet);color:#fff;}
+.disp{font-family:'Space Grotesk',sans-serif;}
+.grad-text{background:linear-gradient(90deg,var(--violet),var(--magenta),var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent;background-size:200% auto;animation:gradflow 6s ease infinite;}
+@keyframes gradflow{0%,100%{background-position:0% center;}50%{background-position:100% center;}}
+
+/* ambient glow background, used sparingly */
+.glow-bg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+.glow-bg::before{content:'';position:absolute;top:-300px;left:-200px;width:800px;height:800px;border-radius:50%;background:radial-gradient(circle,rgba(139,92,246,.32) 0%,transparent 70%);filter:blur(40px);}
+.glow-bg::after{content:'';position:absolute;bottom:-300px;right:-200px;width:800px;height:800px;border-radius:50%;background:radial-gradient(circle,rgba(236,72,153,.28) 0%,transparent 70%);filter:blur(40px);}
+.glow-mid{position:absolute;top:30%;left:50%;transform:translateX(-50%);width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(34,211,238,.14) 0%,transparent 70%);filter:blur(50px);}
+
+/* ===== NAV ===== */
+.nav-wrap{position:sticky;top:0;z-index:999;background:rgba(11,10,18,.85);backdrop-filter:blur(16px);border-bottom:1px solid var(--line);}
+nav{display:flex;align-items:center;justify-content:space-between;padding:18px 56px;max-width:1500px;margin:0 auto;}
+.logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.5rem;color:var(--white);text-decoration:none;display:flex;align-items:center;gap:8px;}
+.logo .dot{width:8px;height:8px;border-radius:50%;background:var(--violet);box-shadow:0 0 12px var(--violet);}
+.nav-links{display:flex;gap:34px;align-items:center;}
+.nav-links a{font-size:.82rem;font-weight:500;color:var(--gray);text-decoration:none;transition:color .2s;}
+.nav-links a:hover{color:var(--white);}
+.nav-cta{background:linear-gradient(90deg,var(--violet),var(--magenta));color:#fff!important;padding:10px 22px;border-radius:50px;font-weight:600!important;}
+.hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;}
+.hamburger span{width:22px;height:2px;background:var(--white);transition:.25s;}
+.hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+.hamburger.open span:nth-child(2){opacity:0;}
+.hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+.mobile-menu{position:fixed;top:0;right:0;bottom:0;width:300px;max-width:85vw;background:var(--bg2);border-left:1px solid var(--line);z-index:1100;transform:translateX(100%);transition:transform .35s cubic-bezier(.16,1,.3,1);padding:90px 32px 32px;display:flex;flex-direction:column;gap:6px;}
+.mobile-menu.open{transform:translateX(0);}
+.mobile-menu a{font-family:'Space Grotesk',sans-serif;font-size:1.2rem;color:var(--white);text-decoration:none;padding:14px 0;border-bottom:1px solid var(--line);}
+.mobile-menu .mm-wa{margin-top:18px;background:#25D366;color:#fff;text-align:center;border-radius:8px;font-family:'Inter',sans-serif;font-size:.85rem;font-weight:700;border:none;}
+.mobile-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:1099;opacity:0;pointer-events:none;transition:opacity .3s;}
+.mobile-overlay.open{opacity:1;pointer-events:all;}
+
+/* ===== HERO ===== */
+.hero{position:relative;z-index:1;padding:64px 56px 100px;max-width:1300px;margin:0 auto;}
+.hero-top{text-align:center;margin-bottom:48px;}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.35);padding:8px 18px;border-radius:50px;font-size:.74rem;font-weight:600;color:#C4B5FD;margin-bottom:28px;}
+.hero-badge .pulse{width:7px;height:7px;border-radius:50%;background:var(--cyan);box-shadow:0 0 10px var(--cyan);animation:blink 1.6s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.3;}}
+.hero-title{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(2.6rem,7vw,5.4rem);line-height:1.02;letter-spacing:-.02em;margin-bottom:22px;}
+.hero-sub{font-size:1rem;font-weight:400;color:var(--gray);max-width:520px;margin:0 auto 36px;line-height:1.7;}
+
+/* ===== SLIDER (HERO SIGNATURE) ===== */
+.slider-wrap{max-width:720px;margin:0 auto;}
+.compare-box{position:relative;width:100%;aspect-ratio:4/5;max-height:560px;border-radius:24px;overflow:hidden;border:1px solid var(--line);box-shadow:0 50px 120px rgba(139,92,246,.32),0 0 80px rgba(236,72,153,.12);user-select:none;background:var(--card);}
+.compare-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;}
+.compare-before{z-index:1;}
+.compare-after-wrap{position:absolute;inset:0;z-index:2;overflow:hidden;width:50%;}
+.compare-after-wrap img{position:absolute;inset:0;width:var(--bw,720px);max-width:none;height:100%;object-fit:cover;}
+.compare-label{position:absolute;top:18px;font-family:'Space Grotesk',sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:7px 14px;border-radius:50px;z-index:5;backdrop-filter:blur(8px);}
+.label-before{left:18px;background:rgba(0,0,0,.5);color:#fff;}
+.label-after{right:18px;background:linear-gradient(90deg,var(--violet),var(--magenta));color:#fff;}
+.compare-handle{position:absolute;top:0;bottom:0;left:50%;width:3px;background:linear-gradient(180deg,var(--cyan),var(--violet),var(--magenta));z-index:4;cursor:ew-resize;box-shadow:0 0 20px rgba(139,92,246,.6);}
+.handle-grip{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:46px;height:46px;border-radius:50%;background:var(--white);display:flex;align-items:center;justify-content:center;gap:3px;cursor:ew-resize;box-shadow:0 8px 24px rgba(0,0,0,.4);}
+.handle-grip span{width:3px;height:14px;background:var(--bg);border-radius:2px;}
+.slider-hint{text-align:center;font-size:.78rem;color:var(--mute);margin-top:18px;display:flex;align-items:center;justify-content:center;gap:8px;}
+.slider-hint .arrows{display:inline-flex;gap:4px;animation:nudge 1.6s ease-in-out infinite;}
+@keyframes nudge{0%,100%{transform:translateX(0);}50%{transform:translateX(4px);}}
+
+.hero-actions{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin-top:40px;}
+.btn-primary{background:linear-gradient(90deg,var(--violet),var(--magenta));color:#fff;padding:17px 38px;border-radius:50px;font-size:.88rem;font-weight:700;text-decoration:none;border:none;cursor:pointer;transition:transform .2s,box-shadow .2s;display:inline-flex;align-items:center;gap:10px;box-shadow:0 12px 32px rgba(139,92,246,.35);}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 16px 40px rgba(139,92,246,.5);}
+.btn-outline{border:1.5px solid var(--line);color:var(--white);padding:15px 32px;border-radius:50px;font-size:.88rem;font-weight:600;text-decoration:none;background:rgba(255,255,255,.02);cursor:pointer;transition:all .2s;display:inline-block;}
+.btn-outline:hover{border-color:var(--violet);background:rgba(139,92,246,.08);}
+#fileInput{display:none;}
+
+.hero-stats{display:flex;justify-content:center;gap:48px;margin-top:56px;flex-wrap:wrap;}
+.hs-num{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.8rem;}
+.hs-lbl{font-size:.68rem;color:var(--mute);margin-top:4px;letter-spacing:.04em;}
+
+/* ===== MARQUEE ===== */
+.marq{background:var(--bg2);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:14px 0;overflow:hidden;white-space:nowrap;position:relative;z-index:1;}
+.marq-track{display:inline-flex;animation:mscroll 22s linear infinite;}
+.marq-track span{font-family:'Space Grotesk',sans-serif;font-size:.92rem;font-weight:600;padding:0 26px;color:var(--gray);}
+.marq-track span.x{color:var(--violet);}
+@keyframes mscroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ===== SECTION COMMON ===== */
+section{padding:110px 56px;position:relative;z-index:1;}
+.sec-head{text-align:center;max-width:600px;margin:0 auto 56px;}
+.sec-ey{font-size:.74rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--violet);margin-bottom:14px;}
+.sec-title{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(2rem,4vw,3rem);line-height:1.1;letter-spacing:-.01em;margin-bottom:16px;}
+.sec-sub{font-size:.92rem;color:var(--gray);line-height:1.7;}
+
+/* ===== CATEGORIES (photo-based) ===== */
+.cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;max-width:1100px;margin:0 auto;}
+.cat-card{position:relative;border-radius:20px;overflow:hidden;cursor:pointer;height:340px;border:1px solid var(--line);}
+.cat-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .5s;filter:saturate(1.1) brightness(.85);}
+.cat-card:hover img{transform:scale(1.08);}
+.cat-card-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(11,10,18,.95) 0%,rgba(11,10,18,.3) 50%,transparent 75%);display:flex;flex-direction:column;justify-content:flex-end;padding:24px;z-index:2;transition:background .3s;}
+.cat-card:hover .cat-card-overlay{background:linear-gradient(to top,rgba(139,92,246,.55) 0%,rgba(11,10,18,.5) 55%,transparent 80%);}
+.cat-icon-badge{width:42px;height:42px;border-radius:12px;background:rgba(255,255,255,.12);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;font-size:1.3rem;margin-bottom:14px;border:1px solid rgba(255,255,255,.2);}
+.cat-name{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.15rem;margin-bottom:6px;color:#fff;}
+.cat-desc{font-size:.78rem;color:rgba(255,255,255,.7);line-height:1.5;}
+.cat-tag{display:inline-block;margin-top:14px;font-size:.66rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--cyan);}
+
+/* ===== HERO PHOTO COLLAGE ===== */
+.hero-collage{position:relative;max-width:1200px;margin:0 auto 56px;display:grid;grid-template-columns:repeat(6,1fr);gap:10px;height:140px;}
+.collage-item{border-radius:14px;overflow:hidden;position:relative;opacity:0;animation:collageIn .6s ease forwards;}
+.collage-item img{width:100%;height:100%;object-fit:cover;display:block;filter:saturate(1.15);}
+.collage-item:nth-child(1){animation-delay:.05s;}
+.collage-item:nth-child(2){animation-delay:.1s;grid-row:span 1;margin-top:-20px;}
+.collage-item:nth-child(3){animation-delay:.15s;}
+.collage-item:nth-child(4){animation-delay:.2s;margin-top:-20px;}
+.collage-item:nth-child(5){animation-delay:.25s;}
+.collage-item:nth-child(6){animation-delay:.3s;margin-top:-20px;}
+@keyframes collageIn{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+.collage-item::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 60%,rgba(11,10,18,.5) 100%);}
+
+/* ===== GLOW RESULT GALLERY (masonry) ===== */
+.gallery-wrap{background:var(--bg2);}
+.result-grid{columns:5 220px;column-gap:14px;max-width:1300px;margin:0 auto;}
+.result-card{break-inside:avoid;margin-bottom:14px;border-radius:16px;overflow:hidden;position:relative;background:var(--card);border:1px solid var(--line);opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease;}
+.result-card.in{opacity:1;transform:translateY(0);}
+.result-card img{width:100%;display:block;transition:transform .4s;}
+.result-card:hover img{transform:scale(1.06);}
+.result-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(11,10,18,.9) 0%,transparent 55%);display:flex;flex-direction:column;justify-content:flex-end;padding:16px;}
+.result-style{font-family:'Space Grotesk',sans-serif;font-size:.82rem;font-weight:700;color:#fff;}
+.result-tag{font-size:.62rem;color:var(--cyan);margin-top:2px;}
+
+/* ===== HOW IT WORKS ===== */
+.how-grid{display:flex;justify-content:center;gap:0;max-width:900px;margin:0 auto;position:relative;}
+.how-step{flex:1;text-align:center;padding:0 20px;position:relative;}
+.how-step:not(:last-child)::after{content:'';position:absolute;top:30px;right:-10%;width:20%;height:1px;background:linear-gradient(90deg,var(--violet),transparent);}
+.how-num{width:60px;height:60px;border-radius:50%;background:var(--card);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.3rem;margin:0 auto 20px;position:relative;z-index:2;}
+.how-step:nth-child(1) .how-num{border-color:var(--violet);color:var(--violet);}
+.how-step:nth-child(2) .how-num{border-color:var(--magenta);color:var(--magenta);}
+.how-step:nth-child(3) .how-num{border-color:var(--cyan);color:var(--cyan);}
+.how-title{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1rem;margin-bottom:8px;}
+.how-desc{font-size:.78rem;color:var(--gray);line-height:1.6;}
+
+/* ===== SOCIAL PROOF / COMMENTS ===== */
+.social-wrap{background:var(--bg2);}
+.social-stats{display:flex;justify-content:center;gap:60px;margin-bottom:64px;flex-wrap:wrap;}
+.ss-num{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:3.2rem;}
+.ss-lbl{font-size:.74rem;color:var(--mute);margin-top:4px;}
+.comments-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:1100px;margin:0 auto;}
+.comment-card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px;}
+.comment-top{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.c-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--violet),var(--magenta));display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.85rem;flex-shrink:0;overflow:hidden;}
+.c-avatar img{width:100%;height:100%;object-fit:cover;}
+.c-name{font-size:.82rem;font-weight:700;}
+.c-handle{font-size:.7rem;color:var(--mute);}
+.c-text{font-size:.84rem;color:var(--gray);line-height:1.6;margin-bottom:10px;}
+.c-stats{display:flex;gap:16px;font-size:.72rem;color:var(--mute);}
+.c-stats span{display:flex;align-items:center;gap:4px;}
+
+/* ===== CTA SECTION ===== */
+.cta-final{text-align:center;position:relative;overflow:hidden;}
+.cta-final::before{content:'';position:absolute;top:-50%;left:50%;transform:translateX(-50%);width:900px;height:900px;border-radius:50%;background:radial-gradient(circle,rgba(139,92,246,.18) 0%,transparent 65%);pointer-events:none;}
+.cta-inner{position:relative;z-index:1;max-width:600px;margin:0 auto;}
+.cta-inner .sec-title{font-size:clamp(2.2rem,5vw,3.6rem);}
+.cta-actions{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin-top:36px;}
+.wa-btn-big{display:inline-flex;align-items:center;gap:10px;background:#25D366;color:#fff;padding:16px 34px;border-radius:50px;font-size:.86rem;font-weight:700;text-decoration:none;transition:transform .2s;}
+.wa-btn-big:hover{transform:translateY(-2px);}
+
+/* ===== FOOTER ===== */
+footer{background:var(--bg2);border-top:1px solid var(--line);padding:56px 56px 28px;position:relative;z-index:1;}
+.ft-top{display:flex;justify-content:space-between;flex-wrap:wrap;gap:40px;margin-bottom:48px;}
+.ft-logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.5rem;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.ft-brand p{font-size:.82rem;color:var(--gray);line-height:1.7;max-width:280px;}
+.ft-cols{display:flex;gap:56px;flex-wrap:wrap;}
+.ft-col h5{font-size:.68rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--white);margin-bottom:16px;}
+.ft-col a{display:block;font-size:.82rem;color:var(--gray);text-decoration:none;margin-bottom:10px;transition:color .2s;}
+.ft-col a:hover{color:var(--violet);}
+.ft-bottom{border-top:1px solid var(--line);padding-top:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;}
+.ft-bottom p{font-size:.72rem;color:var(--mute);}
+.ft-socials{display:flex;gap:10px;}
+.fsoc{width:34px;height:34px;border:1px solid var(--line);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--gray);text-decoration:none;font-size:.7rem;font-weight:700;transition:all .2s;}
+.fsoc:hover{border-color:var(--violet);color:var(--violet);}
+
+/* ===== UPLOAD MODAL ===== */
+.modal-overlay{position:fixed;inset:0;background:rgba(11,10,18,.85);backdrop-filter:blur(8px);z-index:2000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;padding:20px;}
+.modal-overlay.open{opacity:1;pointer-events:all;}
+.modal-box{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:40px;max-width:440px;width:100%;text-align:center;position:relative;}
+.modal-close{position:absolute;top:16px;right:16px;background:none;border:none;color:var(--gray);font-size:1.3rem;cursor:pointer;}
+.modal-box h3{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.5rem;margin-bottom:10px;}
+.modal-box p{font-size:.85rem;color:var(--gray);margin-bottom:28px;line-height:1.6;}
+.upload-zone{border:2px dashed var(--line);border-radius:16px;padding:40px 20px;cursor:pointer;transition:all .2s;margin-bottom:20px;}
+.upload-zone:hover{border-color:var(--violet);background:rgba(139,92,246,.05);}
+.upload-zone .uz-icon{font-size:2.4rem;margin-bottom:12px;}
+.upload-zone p{font-size:.82rem;color:var(--gray);margin:0;}
+.preview-img{width:100%;border-radius:14px;margin-bottom:20px;display:none;max-height:240px;object-fit:cover;}
+.gen-progress{display:none;margin-bottom:20px;}
+.gen-bar{height:6px;background:var(--line);border-radius:4px;overflow:hidden;margin-bottom:10px;}
+.gen-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--violet),var(--magenta),var(--cyan));border-radius:4px;transition:width .3s;}
+.gen-text{font-size:.78rem;color:var(--gray);}
+.style-select{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:24px;}
+.style-chip{background:var(--bg2);border:1px solid var(--line);padding:8px 16px;border-radius:50px;font-size:.74rem;cursor:pointer;transition:all .2s;}
+.style-chip.active{background:linear-gradient(90deg,var(--violet),var(--magenta));border-color:transparent;}
+
+/* Floating WhatsApp */
+.wa-float{position:fixed;bottom:24px;left:24px;z-index:1500;width:46px;height:46px;background:#25D366;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.25rem;text-decoration:none;box-shadow:0 6px 20px rgba(37,211,102,.4);transition:transform .2s;}
+.wa-float:hover{transform:scale(1.08);}
+.wa-float::after{content:'';position:absolute;width:46px;height:46px;border-radius:50%;border:2px solid #25D366;animation:wa-pulse 2s ease-out infinite;}
+@keyframes wa-pulse{0%{transform:scale(1);opacity:.7;}100%{transform:scale(1.6);opacity:0;}}
+
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .6s ease,transform .6s ease;}
+.reveal.in{opacity:1;transform:translateY(0);}
+
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;}}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:980px){
+  nav{padding:16px 20px;}
+  .nav-links{display:none;}
+  .hamburger{display:flex;}
+  .hero{padding:48px 22px 72px;}
+  section,footer{padding-left:22px!important;padding-right:22px!important;}
+  .hero-stats{gap:28px;}
+  .cat-grid{grid-template-columns:1fr 1fr;}
+  .result-grid{columns:2 160px;}
+  .hero-collage{grid-template-columns:repeat(3,1fr);height:auto;}
+  .collage-item{aspect-ratio:1;margin-top:0!important;}
+  .collage-item:nth-child(n+4){display:none;}
+  .how-grid{flex-direction:column;gap:36px;}
+  .how-step::after{display:none;}
+  .comments-grid{grid-template-columns:1fr;}
+  .social-stats{gap:30px;}
+  .ft-cols{gap:30px;}
+  .modal-box{padding:28px 22px;}
+}
+</style>
+</head>
+<body>
+
+<div class="glow-bg"><div class="glow-mid"></div></div>
+
+<!-- FLOATING WHATSAPP -->
+<a href="https://wa.me/000000000?text=Hi%2C%20I%20want%20my%20styled%20look%20on%20GlowFit" target="_blank" class="wa-float">💬</a>
+
+<!-- UPLOAD MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <h3>Generate Your Look</h3>
+    <p>Upload a clear front-facing photo. Pick a style. Watch the transformation.</p>
+
+    <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+      <div class="uz-icon">📸</div>
+      <p>Tap to upload your photo</p>
+    </div>
+    <input type="file" id="fileInput" accept="image/*" onchange="handleUpload(event)">
+    <img id="previewImg" class="preview-img" alt="Your upload">
+
+    <div class="style-select" id="styleSelect">
+      <div class="style-chip active" data-style="Streetwear">Streetwear</div>
+      <div class="style-chip" data-style="Business Suit">Business Suit</div>
+      <div class="style-chip" data-style="Celebrity">Celebrity</div>
+      <div class="style-chip" data-style="Wedding">Wedding</div>
+      <div class="style-chip" data-style="Cyberpunk">Cyberpunk</div>
+      <div class="style-chip" data-style="Runway">Runway</div>
+    </div>
+
+    <div class="gen-progress" id="genProgress">
+      <div class="gen-bar"><div class="gen-fill" id="genFill"></div></div>
+      <div class="gen-text" id="genText">Analyzing photo...</div>
+    </div>
+
+    <button class="btn-primary" style="width:100%;justify-content:center;" id="generateBtn" onclick="startGenerate()">✨ Generate My Style</button>
+  </div>
+</div>
+
+<!-- MOBILE MENU -->
+<div class="mobile-overlay" id="mobileOverlay" onclick="closeMobileMenu()"></div>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#categories" onclick="closeMobileMenu()">Styles</a>
+  <a href="#gallery" onclick="closeMobileMenu()">Glow Results</a>
+  <a href="#how" onclick="closeMobileMenu()">How It Works</a>
+  <a href="#social" onclick="closeMobileMenu()">Reviews</a>
+  <button class="mm-wa" onclick="closeMobileMenu();openModal();">✨ Generate Now</button>
+</div>
+
+<!-- NAV -->
+<div class="nav-wrap">
+  <nav>
+    <a href="#" class="logo"><span class="dot"></span>Glow<span class="grad-text">Fit</span></a>
+    <div class="nav-links">
+      <a href="#categories">Styles</a>
+      <a href="#gallery">Glow Results</a>
+      <a href="#how">How It Works</a>
+      <a href="#social">Reviews</a>
+      <a href="#" class="nav-cta" onclick="openModal();return false;">Generate Now</a>
+    </div>
+    <button class="hamburger" id="hamburgerBtn" onclick="toggleMobileMenu()"><span></span><span></span><span></span></button>
+  </nav>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-collage">
+    <div class="collage-item"><img src="https://images.unsplash.com/photo-1490578474895-699cd4e2cf59?w=200&auto=format&fit=crop&q=80" alt=""></div>
+    <div class="collage-item"><img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&auto=format&fit=crop&q=80" alt=""></div>
+    <div class="collage-item"><img src="https://images.unsplash.com/photo-1503185912284-5271ff81b9a8?w=200&auto=format&fit=crop&q=80" alt=""></div>
+    <div class="collage-item"><img src="https://images.unsplash.com/photo-1519699047748-de8e457a634e?w=200&auto=format&fit=crop&q=80" alt=""></div>
+    <div class="collage-item"><img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=200&auto=format&fit=crop&q=80" alt=""></div>
+    <div class="collage-item"><img src="https://images.unsplash.com/photo-1485968579580-b6d095142e6e?w=200&auto=format&fit=crop&q=80" alt=""></div>
+  </div>
+  <div class="hero-top">
+    <div class="hero-badge"><span class="pulse"></span> Glow Styling Engine — Live</div>
+    <h1 class="hero-title">See Yourself in<br><span class="grad-text">Million Dollar</span> Outfits</h1>
+    <p class="hero-sub">Upload one photo. Our Glow Engine restyles you into luxury streetwear, red-carpet looks, business power suits, and more — in seconds.</p>
+  </div>
+
+  <!-- BEFORE/AFTER SLIDER -->
+  <div class="slider-wrap">
+    <div class="compare-box" id="compareBox">
+      <img class="compare-img compare-before" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=700&auto=format&fit=crop&q=80" alt="Before">
+      <div class="compare-after-wrap" id="afterWrap">
+        <img src="https://images.unsplash.com/photo-1490578474895-699cd4e2cf59?w=700&auto=format&fit=crop&q=80" alt="After">
+      </div>
+      <span class="compare-label label-before">Original</span>
+      <span class="compare-label label-after">Glow Styled</span>
+      <div class="compare-handle" id="compareHandle">
+        <div class="handle-grip"><span></span><span></span></div>
+      </div>
+    </div>
+    <p class="slider-hint"><span class="arrows">◀ ▶</span> Drag to compare</p>
+  </div>
+
+  <div class="hero-actions">
+    <button class="btn-primary" onclick="openModal()">✨ Upload Your Photo</button>
+    <a href="#gallery" class="btn-outline">See Glow Examples</a>
+  </div>
+
+  <div class="hero-stats">
+    <div><div class="hs-num grad-text">50,000+</div><div class="hs-lbl">Creators Used</div></div>
+    <div><div class="hs-num grad-text">6</div><div class="hs-lbl">Outfit Styles</div></div>
+    <div><div class="hs-num grad-text">15s</div><div class="hs-lbl">Avg. Generation</div></div>
+    <div><div class="hs-num grad-text">4.9★</div><div class="hs-lbl">Rated by Users</div></div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marq">
+  <div class="marq-track">
+    <span>NEXT-GEN STYLING</span><span class="x">✦</span>
+    <span>10,000+ LOOKS GENERATED</span><span class="x">✦</span>
+    <span>GLOWFIT</span><span class="x">✦</span>
+    <span>TRENDING ON TIKTOK</span><span class="x">✦</span>
+    <span>NEXT-GEN STYLING</span><span class="x">✦</span>
+    <span>10,000+ LOOKS GENERATED</span><span class="x">✦</span>
+    <span>GLOWFIT</span><span class="x">✦</span>
+    <span>TRENDING ON TIKTOK</span><span class="x">✦</span>
+  </div>
+</div>
+
+<!-- CATEGORIES -->
+<section id="categories">
+  <div class="sec-head reveal">
+    <p class="sec-ey">Pick Your Vibe</p>
+    <h2 class="sec-title">Outfit <span class="grad-text">Categories</span></h2>
+    <p class="sec-sub">Six distinct styles, each trained on thousands of real fashion references.</p>
+  </div>
+  <div class="cat-grid reveal">
+    <div class="cat-card" onclick="openModal()">
+      <img src="https://images.unsplash.com/photo-1490578474895-699cd4e2cf59?w=500&auto=format&fit=crop&q=80" alt="Luxury Streetwear">
+      <div class="cat-card-overlay">
+        <div class="cat-icon-badge">🧥</div>
+        <div class="cat-name">Luxury Streetwear</div>
+        <div class="cat-desc">Oversized fits, designer layering, statement sneakers.</div>
+        <span class="cat-tag">Try this style →</span>
+      </div>
+    </div>
+    <div class="cat-card" onclick="openModal()">
+      <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&auto=format&fit=crop&q=80" alt="Formal Business Suit">
+      <div class="cat-card-overlay">
+        <div class="cat-icon-badge">🤵</div>
+        <div class="cat-name">Formal Business Suit</div>
+        <div class="cat-desc">Sharp tailoring, boardroom-ready power dressing.</div>
+        <span class="cat-tag">Try this style →</span>
+      </div>
+    </div>
+    <div class="cat-card" onclick="openModal()">
+      <img src="https://images.unsplash.com/photo-1503185912284-5271ff81b9a8?w=500&auto=format&fit=crop&q=80" alt="Celebrity Style">
+      <div class="cat-card-overlay">
+        <div class="cat-icon-badge">⭐</div>
+        <div class="cat-name">Celebrity Style</div>
+        <div class="cat-desc">Red-carpet energy, paparazzi-ready looks.</div>
+        <span class="cat-tag">Try this style →</span>
+      </div>
+    </div>
+    <div class="cat-card" onclick="openModal()">
+      <img src="https://images.unsplash.com/photo-1519699047748-de8e457a634e?w=500&auto=format&fit=crop&q=80" alt="Wedding Look">
+      <div class="cat-card-overlay">
+        <div class="cat-icon-badge">💍</div>
+        <div class="cat-name">Wedding Look</div>
+        <div class="cat-desc">Elegant bridal & groom-ready formal wear.</div>
+        <span class="cat-tag">Try this style →</span>
+      </div>
+    </div>
+    <div class="cat-card" onclick="openModal()">
+      <img src="https://images.unsplash.com/photo-1485968579580-b6d095142e6e?w=500&auto=format&fit=crop&q=80" alt="Cyberpunk Fashion">
+      <div class="cat-card-overlay">
+        <div class="cat-icon-badge">🌃</div>
+        <div class="cat-name">Cyberpunk Fashion</div>
+        <div class="cat-desc">Neon accents, futuristic silhouettes, edge.</div>
+        <span class="cat-tag">Try this style →</span>
+      </div>
+    </div>
+    <div class="cat-card" onclick="openModal()">
+      <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=500&auto=format&fit=crop&q=80" alt="Model Runway Look">
+      <div class="cat-card-overlay">
+        <div class="cat-icon-badge">🚶</div>
+        <div class="cat-name">Model Runway Look</div>
+        <div class="cat-desc">High-fashion editorial, avant-garde styling.</div>
+        <span class="cat-tag">Try this style →</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GLOW RESULT GALLERY -->
+<section class="gallery-wrap" id="gallery">
+  <div class="sec-head reveal">
+    <p class="sec-ey">Real Outputs</p>
+    <h2 class="sec-title">Glow Generated <span class="grad-text">Looks</span></h2>
+    <p class="sec-sub">A few transformations from the GlowFit community.</p>
+  </div>
+  <div class="result-grid">
+    <div class="result-card reveal">
+      <img src="https://images.unsplash.com/photo-1490578474895-699cd4e2cf59?w=400&auto=format&fit=crop&q=80" alt="Streetwear look">
+      <div class="result-overlay"><div class="result-style">Luxury Streetwear</div><div class="result-tag">Generated in 12s</div></div>
+    </div>
+    <div class="result-card reveal">
+      <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&auto=format&fit=crop&q=80" alt="Business suit look">
+      <div class="result-overlay"><div class="result-style">Business Suit</div><div class="result-tag">Generated in 14s</div></div>
+    </div>
+    <div class="result-card reveal">
+      <img src="https://images.unsplash.com/photo-1503185912284-5271ff81b9a8?w=400&auto=format&fit=crop&q=80" alt="Celebrity style">
+      <div class="result-overlay"><div class="result-style">Celebrity Style</div><div class="result-tag">Generated in 11s</div></div>
+    </div>
+    <div class="result-card reveal">
+      <img src="https://images.unsplash.com/photo-1519699047748-de8e457a634e?w=400&auto=format&fit=crop&q=80" alt="Wedding look">
+      <div class="result-overlay"><div class="result-style">Wedding Look</div><div class="result-tag">Generated in 13s</div></div>
+    </div>
+    <div class="result-card reveal">
+      <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400&auto=format&fit=crop&q=80" alt="Runway look">
+      <div class="result-overlay"><div class="result-style">Runway Look</div><div class="result-tag">Generated in 15s</div></div>
+    </div>
+    <div class="result-card reveal">
+      <img src="https://images.unsplash.com/photo-1485968579580-b6d095142e6e?w=400&auto=format&fit=crop&q=80" alt="Cyberpunk look">
+      <div class="result-overlay"><div class="result-style">Cyberpunk Fashion</div><div class="result-tag">Generated in 16s</div></div>
+    </div>
+    <div class="result-card reveal">
+      <img src="https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=400&auto=format&fit=crop&q=80" alt="Streetwear look 2">
+      <div class="result-overlay"><div class="result-style">Luxury Streetwear</div><div class="result-tag">Generated in 10s</div></div>
+    </div>
+    <div class="result-card reveal">
+      <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&auto=format&fit=crop&q=80" alt="Casual styled look">
+      <div class="result-overlay"><div class="result-style">Model Runway</div><div class="result-tag">Generated in 13s</div></div>
+    </div>
+    <div class="result-card reveal">
+      <img src="https://images.unsplash.com/photo-1488161628813-04466f872be2?w=400&auto=format&fit=crop&q=80" alt="Celebrity look 2">
+      <div class="result-overlay"><div class="result-style">Celebrity Style</div><div class="result-tag">Generated in 12s</div></div>
+    </div>
+    <div class="result-card reveal">
+      <img src="https://images.unsplash.com/photo-1488207984690-0bd5b1bb01ec?w=400&auto=format&fit=crop&q=80" alt="Business look 2">
+      <div class="result-overlay"><div class="result-style">Business Suit</div><div class="result-tag">Generated in 14s</div></div>
+    </div>
+    <div class="result-card reveal">
+      <img src="https://images.unsplash.com/photo-1492288991661-058aa541ff43?w=400&auto=format&fit=crop&q=80" alt="Wedding look 2">
+      <div class="result-overlay"><div class="result-style">Wedding Look</div><div class="result-tag">Generated in 17s</div></div>
+    </div>
+    <div class="result-card reveal">
+      <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=400&auto=format&fit=crop&q=80" alt="Runway look 2">
+      <div class="result-overlay"><div class="result-style">Runway Look</div><div class="result-tag">Generated in 11s</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="sec-head reveal">
+    <p class="sec-ey">Three Steps</p>
+    <h2 class="sec-title">How It <span class="grad-text">Works</span></h2>
+  </div>
+  <div class="how-grid reveal">
+    <div class="how-step">
+      <div class="how-num">1</div>
+      <div class="how-title">Upload Photo</div>
+      <div class="how-desc">One clear, front-facing photo is all the Glow Engine needs to start.</div>
+    </div>
+    <div class="how-step">
+      <div class="how-num">2</div>
+      <div class="how-title">Pick a Style</div>
+      <div class="how-desc">Choose from 6 curated outfit categories or let the engine surprise you.</div>
+    </div>
+    <div class="how-step">
+      <div class="how-num">3</div>
+      <div class="how-title">Get Your Look</div>
+      <div class="how-desc">Your fully styled result is ready to download and share in seconds.</div>
+    </div>
+  </div>
+</section>
+
+<!-- SOCIAL PROOF -->
+<section class="social-wrap" id="social">
+  <div class="sec-head reveal">
+    <p class="sec-ey">Loved by Creators</p>
+    <h2 class="sec-title">Used by <span class="grad-text">10,000+</span> Creators</h2>
+  </div>
+  <div class="social-stats reveal">
+    <div><div class="ss-num grad-text">4.9★</div><div class="ss-lbl">Average Rating</div></div>
+    <div><div class="ss-num grad-text">50K+</div><div class="ss-lbl">Looks Generated</div></div>
+    <div><div class="ss-num grad-text">2.3M</div><div class="ss-lbl">TikTok Views</div></div>
+  </div>
+  <div class="comments-grid reveal">
+    <div class="comment-card">
+      <div class="comment-top"><div class="c-avatar"><img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&auto=format&fit=crop&q=80" alt="Ayesha"></div><div><div class="c-name">@ayeshaxo</div><div class="c-handle">2 hours ago</div></div></div>
+      <p class="c-text">MERA BHI BANA DO PLEASE 😭 ye streetwear wala look itna fire hai</p>
+      <div class="c-stats"><span>❤️ 2.4K</span><span>💬 184</span></div>
+    </div>
+    <div class="comment-card">
+      <div class="comment-top"><div class="c-avatar"><img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&auto=format&fit=crop&q=80" alt="Daniel"></div><div><div class="c-name">@danielsfits</div><div class="c-handle">5 hours ago</div></div></div>
+      <p class="c-text">wait this is actually insane, tried the business suit one and it looked SO real</p>
+      <div class="c-stats"><span>❤️ 1.8K</span><span>💬 96</span></div>
+    </div>
+    <div class="comment-card">
+      <div class="comment-top"><div class="c-avatar"><img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&auto=format&fit=crop&q=80" alt="Ramsha"></div><div><div class="c-name">@ramsha.k</div><div class="c-handle">1 day ago</div></div></div>
+      <p class="c-text">used this for my wedding inspo board, obsessed 💍✨ link in bio works</p>
+      <div class="c-stats"><span>❤️ 3.1K</span><span>💬 220</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="cta-final">
+  <div class="cta-inner reveal">
+    <p class="sec-ey" style="justify-content:center;display:flex;">Your Turn</p>
+    <h2 class="sec-title">Generate Your<br><span class="grad-text">Style Now</span></h2>
+    <p class="sec-sub" style="margin:0 auto;">Free to try. Takes less than 15 seconds. No signup required.</p>
+    <div class="cta-actions">
+      <button class="btn-primary" onclick="openModal()">✨ Generate Your Style</button>
+      <a href="https://wa.me/000000000?text=Hi%2C%20I%20want%20my%20styled%20look%20on%20GlowFit" target="_blank" class="wa-btn-big">💬 Order on WhatsApp</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="ft-top">
+    <div class="ft-brand">
+      <div class="ft-logo"><span class="dot" style="width:7px;height:7px;border-radius:50%;background:var(--violet);box-shadow:0 0 10px var(--violet);"></span>Glow<span class="grad-text">Fit</span></div>
+      <p>Next-gen outfit transformation. Upload a photo, pick a style, see yourself in million dollar fits.</p>
+    </div>
+    <div class="ft-cols">
+      <div class="ft-col">
+        <h5>Styles</h5>
+        <a href="#categories">Streetwear</a>
+        <a href="#categories">Business Suit</a>
+        <a href="#categories">Celebrity</a>
+        <a href="#categories">Wedding</a>
+      </div>
+      <div class="ft-col">
+        <h5>Product</h5>
+        <a href="#how">How It Works</a>
+        <a href="#gallery">Glow Gallery</a>
+        <a href="#social">Reviews</a>
+      </div>
+      <div class="ft-col">
+        <h5>Follow</h5>
+        <a href="#">TikTok</a>
+        <a href="#">Instagram</a>
+        <a href="#">WhatsApp</a>
+      </div>
+    </div>
+  </div>
+  <div class="ft-bottom">
+    <p>© 2026 GlowFit. All rights reserved.</p>
+    <div class="ft-socials">
+      <a href="#" class="fsoc">TT</a>
+      <a href="#" class="fsoc">IG</a>
+      <a href="#" class="fsoc">WA</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ===== BEFORE/AFTER SLIDER =====
+const compareBox = document.getElementById('compareBox');
+const afterWrap = document.getElementById('afterWrap');
+const handle = document.getElementById('compareHandle');
+let dragging = false;
+
+function setSlider(percent){
+  percent = Math.max(0, Math.min(100, percent));
+  afterWrap.style.width = percent + '%';
+  handle.style.left = percent + '%';
+  const boxWidth = compareBox.offsetWidth;
+  afterWrap.querySelector('img').style.width = boxWidth + 'px';
+}
+function updateFromEvent(e){
+  const rect = compareBox.getBoundingClientRect();
+  const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+  setSlider((x / rect.width) * 100);
+}
+handle.addEventListener('mousedown', e=>{dragging=true; e.preventDefault();});
+window.addEventListener('mouseup', ()=>dragging=false);
+window.addEventListener('mousemove', e=>{if(dragging) updateFromEvent(e);});
+handle.addEventListener('touchstart', e=>{dragging=true;});
+window.addEventListener('touchend', ()=>dragging=false);
+window.addEventListener('touchmove', e=>{if(dragging) updateFromEvent(e);});
+compareBox.addEventListener('click', e=>{ if(e.target===handle||handle.contains(e.target)) return; updateFromEvent(e); });
+window.addEventListener('resize', ()=>{
+  const currentPercent = parseFloat(afterWrap.style.width) || 50;
+  setSlider(currentPercent);
+});
+setSlider(50);
+
+// ===== MODAL =====
+function openModal(){ document.getElementById('modalOverlay').classList.add('open'); }
+function closeModal(){ document.getElementById('modalOverlay').classList.remove('open'); resetModal(); }
+function resetModal(){
+  document.getElementById('genProgress').style.display = 'none';
+  document.getElementById('genFill').style.width = '0%';
+  document.getElementById('generateBtn').disabled = false;
+  document.getElementById('generateBtn').textContent = '✨ Generate My Style';
+}
+
+let uploadedImg = null;
+function handleUpload(e){
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(ev){
+    uploadedImg = ev.target.result;
+    const preview = document.getElementById('previewImg');
+    preview.src = uploadedImg;
+    preview.style.display = 'block';
+    document.getElementById('uploadZone').style.display = 'none';
+  };
+  reader.readAsDataURL(file);
+}
+
+// style chip selection
+document.querySelectorAll('.style-chip').forEach(chip=>{
+  chip.addEventListener('click', ()=>{
+    document.querySelectorAll('.style-chip').forEach(c=>c.classList.remove('active'));
+    chip.classList.add('active');
+  });
+});
+
+function startGenerate(){
+  if(!uploadedImg){
+    alert('Please upload a photo first.');
+    return;
+  }
+  const btn = document.getElementById('generateBtn');
+  const progress = document.getElementById('genProgress');
+  const fill = document.getElementById('genFill');
+  const text = document.getElementById('genText');
+  const activeStyle = document.querySelector('.style-chip.active').dataset.style;
+
+  btn.disabled = true;
+  progress.style.display = 'block';
+
+  const steps = [
+    {pct:20, msg:'Analyzing photo...'},
+    {pct:45, msg:'Detecting body pose...'},
+    {pct:70, msg:`Applying ${activeStyle} style...`},
+    {pct:90, msg:'Rendering final look...'},
+    {pct:100, msg:'Done! ✨'}
+  ];
+  let i = 0;
+  const interval = setInterval(()=>{
+    if(i >= steps.length){
+      clearInterval(interval);
+      setTimeout(()=>{
+        alert(`Your ${activeStyle} look is ready! (Demo preview — full render available on request via WhatsApp.)`);
+        closeModal();
+      }, 400);
+      return;
+    }
+    fill.style.width = steps[i].pct + '%';
+    text.textContent = steps[i].msg;
+    i++;
+  }, 600);
+}
+
+// ===== MOBILE MENU =====
+function toggleMobileMenu(){
+  document.getElementById('mobileMenu').classList.toggle('open');
+  document.getElementById('mobileOverlay').classList.toggle('open');
+  document.getElementById('hamburgerBtn').classList.toggle('open');
+}
+function closeMobileMenu(){
+  document.getElementById('mobileMenu').classList.remove('open');
+  document.getElementById('mobileOverlay').classList.remove('open');
+  document.getElementById('hamburgerBtn').classList.remove('open');
+}
+
+// ===== SCROLL REVEAL =====
+const obs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('in'); });
+},{threshold:.1});
+document.querySelectorAll('.reveal, .result-card').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
