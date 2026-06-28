@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Usama Lens Store — ShadeX Sunglasses</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0e0e10;
+    --ink-soft:#17171a;
+    --cream:#f5f2ea;
+    --gold:#ffb13c;
+    --gold-soft:#ffd28a;
+    --bronze:#8c6b3f;
+    --flare:#ff5a3c;
+    --line: rgba(245,242,234,0.12);
+    --maxw: 1280px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--ink);
+    color:var(--cream);
+    font-family:'Archivo', sans-serif;
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  img{max-width:100%;display:block;}
+  a{color:inherit;text-decoration:none;}
+  ::selection{background:var(--gold); color:var(--ink);}
+
+  .display{
+    font-family:'Anton', sans-serif;
+    text-transform:uppercase;
+    letter-spacing:0.01em;
+    line-height:0.92;
+  }
+  .eyebrow{
+    font-size:0.72rem;
+    letter-spacing:0.28em;
+    text-transform:uppercase;
+    color:var(--gold);
+    font-weight:600;
+  }
+  .wrap{
+    max-width:var(--maxw);
+    margin:0 auto;
+    padding:0 6vw;
+  }
+  @media (max-width:640px){ .wrap{padding:0 22px;} }
+
+  /* ---------- focus visibility ---------- */
+  a:focus-visible, button:focus-visible{
+    outline:2px solid var(--gold);
+    outline-offset:3px;
+  }
+
+  /* ===================== NAVBAR ===================== */
+  .navbar{
+    position:fixed;
+    top:0; left:0; right:0;
+    z-index:200;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:22px 6vw;
+    transition:transform 0.45s cubic-bezier(.65,0,.35,1), background 0.4s ease, padding 0.4s ease, border-color .4s ease;
+    border-bottom:1px solid transparent;
+  }
+  .navbar.scrolled{
+    background:rgba(14,14,16,0.82);
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+    padding:14px 6vw;
+    border-bottom:1px solid var(--line);
+  }
+  .navbar.hide{ transform:translateY(-110%); }
+
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-family:'Anton', sans-serif;
+    font-size:1.25rem;
+    letter-spacing:0.03em;
+    text-transform:uppercase;
+  }
+  .brand .mark{
+    width:34px;height:34px;
+    border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, var(--gold-soft), var(--gold) 55%, var(--bronze) 100%);
+    position:relative;
+    flex-shrink:0;
+    box-shadow:0 0 18px rgba(255,177,60,0.55);
+  }
+  .brand .mark::after{
+    content:"";
+    position:absolute; inset:7px;
+    border-radius:50%;
+    background:var(--ink);
+    opacity:0.78;
+  }
+  .brand small{
+    display:block;
+    font-family:'Archivo',sans-serif;
+    text-transform:none;
+    letter-spacing:0.05em;
+    font-weight:500;
+    font-size:0.62rem;
+    color:var(--gold);
+    margin-top:1px;
+  }
+
+  .nav-links{
+    display:flex;
+    gap:38px;
+    font-size:0.84rem;
+    font-weight:600;
+    letter-spacing:0.04em;
+    text-transform:uppercase;
+  }
+  .nav-links a{
+    position:relative;
+    padding-bottom:4px;
+    opacity:0.85;
+    transition:opacity .25s;
+  }
+  .nav-links a::after{
+    content:"";
+    position:absolute; left:0; bottom:0;
+    width:0; height:2px;
+    background:var(--gold);
+    transition:width .3s ease;
+  }
+  .nav-links a:hover{ opacity:1; }
+  .nav-links a:hover::after{ width:100%; }
+
+  .nav-cta{
+    display:flex; align-items:center; gap:18px;
+  }
+  .btn-ghost{
+    border:1px solid rgba(245,242,234,0.35);
+    padding:10px 20px;
+    border-radius:999px;
+    font-size:0.78rem;
+    font-weight:700;
+    letter-spacing:0.05em;
+    text-transform:uppercase;
+    transition:all .25s ease;
+    white-space:nowrap;
+  }
+  .btn-ghost:hover{
+    background:var(--gold);
+    border-color:var(--gold);
+    color:var(--ink);
+  }
+
+  .burger{
+    display:none;
+    flex-direction:column;
+    gap:5px;
+    cursor:pointer;
+    background:none;
+    border:none;
+    padding:6px;
+  }
+  .burger span{ width:24px; height:2px; background:var(--cream); }
+
+  @media (max-width:880px){
+    .nav-links{ display:none; }
+    .burger{ display:flex; }
+  }
+
+  /* ===================== HERO ===================== */
+  .hero{
+    position:relative;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    padding-top:110px;
+    background:
+      radial-gradient(ellipse 60% 50% at 75% 18%, rgba(255,177,60,0.18), transparent 60%),
+      radial-gradient(ellipse 50% 40% at 10% 85%, rgba(255,90,60,0.10), transparent 60%),
+      var(--ink);
+    overflow:hidden;
+  }
+  .hero::before{
+    content:"";
+    position:absolute; inset:0;
+    background-image:
+      linear-gradient(rgba(245,242,234,0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(245,242,234,0.035) 1px, transparent 1px);
+    background-size:64px 64px;
+    mask-image:radial-gradient(ellipse 70% 60% at 50% 30%, black, transparent 75%);
+    pointer-events:none;
+  }
+  .hero-grid{
+    display:grid;
+    grid-template-columns:1.05fr 0.95fr;
+    gap:40px;
+    align-items:center;
+    width:100%;
+    position:relative;
+    z-index:2;
+  }
+  @media (max-width:980px){
+    .hero-grid{ grid-template-columns:1fr; }
+  }
+
+  .hero-copy .eyebrow{ display:flex; align-items:center; gap:10px; margin-bottom:18px;}
+  .hero-copy .eyebrow .dot{
+    width:7px;height:7px;border-radius:50%;background:var(--flare);
+    box-shadow:0 0 10px var(--flare);
+    animation:pulse 1.6s infinite ease-in-out;
+  }
+  @keyframes pulse{ 0%,100%{opacity:1; transform:scale(1);} 50%{opacity:0.4; transform:scale(0.7);} }
+
+  .hero-copy h1{
+    font-size:clamp(3rem, 8vw, 5.6rem);
+    color:var(--cream);
+  }
+  .hero-copy h1 .accent{
+    color:transparent;
+    -webkit-text-stroke:2px var(--gold);
+    text-stroke:2px var(--gold);
+  }
+  .hero-copy p{
+    margin-top:24px;
+    font-size:1.05rem;
+    line-height:1.65;
+    max-width:480px;
+    color:rgba(245,242,234,0.72);
+    font-weight:400;
+  }
+  .hero-actions{
+    margin-top:38px;
+    display:flex;
+    gap:16px;
+    flex-wrap:wrap;
+  }
+  .btn-solid{
+    background:var(--gold);
+    color:var(--ink);
+    padding:16px 32px;
+    border-radius:999px;
+    font-weight:700;
+    font-size:0.85rem;
+    letter-spacing:0.04em;
+    text-transform:uppercase;
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    transition:transform .3s cubic-bezier(.34,1.56,.64,1), box-shadow .3s ease;
+    box-shadow:0 8px 30px rgba(255,177,60,0.25);
+  }
+  .btn-solid:hover{ transform:translateY(-3px) scale(1.02); box-shadow:0 14px 36px rgba(255,177,60,0.4); }
+
+  .hero-stats{
+    margin-top:54px;
+    display:flex;
+    gap:42px;
+    flex-wrap:wrap;
+  }
+  .hero-stats div strong{
+    font-family:'Anton',sans-serif;
+    font-size:1.9rem;
+    display:block;
+    color:var(--gold);
+  }
+  .hero-stats div span{
+    font-size:0.72rem;
+    letter-spacing:0.05em;
+    text-transform:uppercase;
+    color:rgba(245,242,234,0.55);
+  }
+
+  /* ----- 3D tilt hero visual ----- */
+  .hero-visual{
+    position:relative;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    perspective:1200px;
+    min-height:420px;
+  }
+  .tilt-card{
+    position:relative;
+    width:min(420px, 86%);
+    aspect-ratio:1/1.08;
+    border-radius:28px;
+    background:linear-gradient(155deg, #1c1c1f, #0b0b0c 70%);
+    border:1px solid var(--line);
+    transform-style:preserve-3d;
+    transition:transform .15s ease-out, box-shadow .3s;
+    box-shadow:0 30px 60px -20px rgba(0,0,0,0.6);
+    overflow:hidden;
+  }
+  .tilt-card .glare{
+    position:absolute; inset:0;
+    background:radial-gradient(circle at var(--mx,50%) var(--my,30%), rgba(255,210,138,0.35), transparent 55%);
+    transition:background .1s;
+    z-index:3;
+    mix-blend-mode:screen;
+  }
+  .tilt-card img{
+    position:absolute;
+    inset:0;
+    width:100%; height:100%;
+    object-fit:cover;
+    transform:translateZ(20px);
+  }
+  .tilt-card .tag{
+    position:absolute; bottom:18px; left:18px; right:18px;
+    z-index:4;
+    display:flex; justify-content:space-between; align-items:center;
+    background:rgba(14,14,16,0.65);
+    backdrop-filter:blur(8px);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:12px 16px;
+    transform:translateZ(40px);
+  }
+  .tilt-card .tag .name{ font-weight:700; font-size:0.85rem; }
+  .tilt-card .tag .price{ color:var(--gold); font-weight:800; font-size:0.95rem; }
+
+  .float-chip{
+    position:absolute;
+    background:var(--ink-soft);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:10px 14px;
+    font-size:0.76rem;
+    font-weight:700;
+    display:flex; align-items:center; gap:8px;
+    box-shadow:0 10px 24px rgba(0,0,0,0.4);
+    animation:floaty 4.5s ease-in-out infinite;
+  }
+  .float-chip.one{ top:6%; left:-6%; animation-delay:0s;}
+  .float-chip.two{ bottom:8%; right:-8%; animation-delay:1.2s;}
+  .float-chip .ico{ font-size:1rem; }
+  @keyframes floaty{ 0%,100%{ transform:translateY(0px);} 50%{ transform:translateY(-14px);} }
+  @media (max-width:560px){ .float-chip{ display:none; } }
+
+  .scroll-cue{
+    position:absolute;
+    bottom:28px; left:50%;
+    transform:translateX(-50%);
+    display:flex; flex-direction:column; align-items:center;
+    gap:8px;
+    font-size:0.65rem;
+    letter-spacing:0.2em;
+    text-transform:uppercase;
+    color:rgba(245,242,234,0.45);
+    z-index:3;
+  }
+  .scroll-cue .line{
+    width:1px; height:34px;
+    background:linear-gradient(var(--gold), transparent);
+    animation:scrolldown 1.8s infinite;
+  }
+  @keyframes scrolldown{ 0%{transform:scaleY(0); transform-origin:top;} 50%{transform:scaleY(1); transform-origin:top;} 51%{transform-origin:bottom;} 100%{transform:scaleY(0); transform-origin:bottom;} }
+
+  /* ===================== MARQUEE ===================== */
+  .marquee{
+    border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+    background:var(--ink-soft);
+    padding:18px 0;
+    overflow:hidden;
+    white-space:nowrap;
+  }
+  .marquee-track{
+    display:inline-flex;
+    gap:60px;
+    animation:scroll-left 26s linear infinite;
+    font-family:'Anton', sans-serif;
+    font-size:1.1rem;
+    letter-spacing:0.04em;
+    text-transform:uppercase;
+    color:rgba(245,242,234,0.55);
+  }
+  .marquee-track span{ display:flex; align-items:center; gap:60px; }
+  .marquee-track .star{ color:var(--gold); }
+  @keyframes scroll-left{ from{transform:translateX(0);} to{transform:translateX(-50%);} }
+
+  /* ===================== SECTION HEADERS ===================== */
+  .section{ padding:110px 0; position:relative; }
+  .section-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    gap:30px;
+    margin-bottom:56px;
+    flex-wrap:wrap;
+  }
+  .section-head h2{
+    font-size:clamp(2.2rem, 4.4vw, 3.4rem);
+    margin-top:10px;
+  }
+  .section-head p{
+    max-width:380px;
+    color:rgba(245,242,234,0.6);
+    font-size:0.95rem;
+    line-height:1.6;
+  }
+
+  /* ===================== PRODUCTS ===================== */
+  .product-grid{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:22px;
+  }
+  @media (max-width:980px){ .product-grid{ grid-template-columns:repeat(2,1fr); } }
+  @media (max-width:560px){ .product-grid{ grid-template-columns:1fr; } }
+
+  .product-card{
+    position:relative;
+    border-radius:20px;
+    overflow:hidden;
+    background:var(--ink-soft);
+    border:1px solid var(--line);
+    transition:transform .45s cubic-bezier(.2,.8,.2,1), border-color .3s;
+  }
+  .product-card:hover{ transform:translateY(-8px); border-color:rgba(255,177,60,0.4); }
+  .product-media{
+    position:relative;
+    aspect-ratio:4/5;
+    overflow:hidden;
+  }
+  .product-media img{
+    width:100%; height:100%;
+    object-fit:cover;
+    transition:transform .6s cubic-bezier(.2,.8,.2,1);
+  }
+  .product-card:hover .product-media img{ transform:scale(1.08); }
+  .badge{
+    position:absolute; top:14px; left:14px;
+    background:var(--flare);
+    color:var(--ink);
+    font-size:0.65rem;
+    font-weight:800;
+    letter-spacing:0.04em;
+    text-transform:uppercase;
+    padding:6px 11px;
+    border-radius:999px;
+    z-index:2;
+  }
+  .badge.gold{ background:var(--gold); }
+  .quick-add{
+    position:absolute; bottom:14px; left:14px; right:14px;
+    background:var(--cream);
+    color:var(--ink);
+    text-align:center;
+    padding:11px 0;
+    border-radius:999px;
+    font-size:0.72rem;
+    font-weight:800;
+    letter-spacing:0.04em;
+    text-transform:uppercase;
+    opacity:0;
+    transform:translateY(14px);
+    transition:all .3s ease;
+    z-index:2;
+    cursor:pointer;
+    border:none;
+  }
+  .product-card:hover .quick-add{ opacity:1; transform:translateY(0); }
+  .product-info{ padding:16px 18px 20px; }
+  .product-info .pname{ font-weight:700; font-size:0.95rem; margin-bottom:4px; }
+  .product-info .pmeta{ display:flex; justify-content:space-between; align-items:center; }
+  .product-info .price{ color:var(--gold); font-weight:800; }
+  .product-info .old{ text-decoration:line-through; color:rgba(245,242,234,0.4); font-size:0.8rem; margin-right:6px; font-weight:500;}
+  .stars{ color:var(--gold); font-size:0.75rem; letter-spacing:1px; }
+
+  /* ===================== FEATURE / WHY ===================== */
+  .why-grid{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:1px;
+    background:var(--line);
+    border:1px solid var(--line);
+    border-radius:20px;
+    overflow:hidden;
+  }
+  @media (max-width:880px){ .why-grid{ grid-template-columns:repeat(2,1fr); } }
+  @media (max-width:560px){ .why-grid{ grid-template-columns:1fr; } }
+  .why-cell{
+    background:var(--ink-soft);
+    padding:38px 28px;
+    transition:background .3s;
+  }
+  .why-cell:hover{ background:#1d1d20; }
+  .why-cell .num{
+    font-family:'Anton',sans-serif;
+    font-size:2.2rem;
+    color:rgba(255,177,60,0.3);
+    display:block;
+    margin-bottom:14px;
+  }
+  .why-cell h3{ font-size:1.05rem; margin-bottom:8px; }
+  .why-cell p{ font-size:0.86rem; color:rgba(245,242,234,0.58); line-height:1.55; }
+
+  /* ===================== LIFESTYLE / SOCIAL PROOF (TikTok feel) ===================== */
+  .social-strip{
+    display:grid;
+    grid-template-columns:repeat(5, 1fr);
+    gap:14px;
+  }
+  @media (max-width:880px){ .social-strip{ grid-template-columns:repeat(3,1fr); } }
+  @media (max-width:560px){ .social-strip{ grid-template-columns:repeat(2,1fr); } }
+  .reel{
+    position:relative;
+    aspect-ratio:9/16;
+    border-radius:18px;
+    overflow:hidden;
+    border:1px solid var(--line);
+  }
+  .reel img{ width:100%; height:100%; object-fit:cover; transition:transform .5s; }
+  .reel:hover img{ transform:scale(1.06); }
+  .reel .play{
+    position:absolute; inset:0;
+    display:flex; align-items:center; justify-content:center;
+    background:linear-gradient(180deg, rgba(0,0,0,0) 50%, rgba(0,0,0,0.7) 100%);
+  }
+  .reel .play::before{
+    content:"▶";
+    width:46px; height:46px;
+    border-radius:50%;
+    background:rgba(245,242,234,0.92);
+    color:var(--ink);
+    display:flex; align-items:center; justify-content:center;
+    font-size:0.85rem;
+  }
+  .reel .views{
+    position:absolute; bottom:12px; left:12px;
+    font-size:0.72rem; font-weight:700;
+    background:rgba(0,0,0,0.55);
+    padding:5px 10px;
+    border-radius:999px;
+    backdrop-filter:blur(4px);
+  }
+
+  /* ===================== TESTIMONIALS ===================== */
+  .testi-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:22px;
+  }
+  @media (max-width:880px){ .testi-grid{ grid-template-columns:1fr; } }
+  .testi-card{
+    background:var(--ink-soft);
+    border:1px solid var(--line);
+    border-radius:20px;
+    padding:30px;
+  }
+  .testi-card .stars{ margin-bottom:14px; font-size:0.95rem; }
+  .testi-card p{ font-size:0.95rem; line-height:1.6; color:rgba(245,242,234,0.82); margin-bottom:20px;}
+  .testi-who{ display:flex; align-items:center; gap:12px; }
+  .testi-who .av{
+    width:42px;height:42px;border-radius:50%;
+    background:linear-gradient(135deg, var(--gold), var(--flare));
+    display:flex; align-items:center; justify-content:center;
+    font-weight:800; color:var(--ink);
+    font-family:'Anton', sans-serif;
+  }
+  .testi-who span{ display:block; font-size:0.8rem; color:rgba(245,242,234,0.55); }
+  .testi-who strong{ font-size:0.9rem; }
+
+  /* ===================== CTA BAND ===================== */
+  .cta-band{
+    position:relative;
+    margin:0 6vw;
+    border-radius:28px;
+    padding:70px 8vw;
+    text-align:center;
+    background:
+      radial-gradient(ellipse 70% 90% at 30% 0%, rgba(255,177,60,0.25), transparent 60%),
+      linear-gradient(155deg, #1a1a1d, #0b0b0c);
+    border:1px solid var(--line);
+    overflow:hidden;
+  }
+  .cta-band h2{ font-size:clamp(2rem,5vw,3.4rem); margin-bottom:18px; }
+  .cta-band p{ color:rgba(245,242,234,0.65); max-width:460px; margin:0 auto 32px; font-size:0.98rem; }
+
+  /* ===================== FOOTER ===================== */
+  footer{
+    border-top:1px solid var(--line);
+    padding:64px 0 28px;
+    margin-top:60px;
+  }
+  .foot-grid{
+    display:grid;
+    grid-template-columns:1.4fr 1fr 1fr 1fr;
+    gap:40px;
+    padding-bottom:46px;
+  }
+  @media (max-width:880px){ .foot-grid{ grid-template-columns:1fr 1fr; } }
+  @media (max-width:560px){ .foot-grid{ grid-template-columns:1fr; } }
+  .foot-grid h4{
+    font-size:0.78rem;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--gold);
+    margin-bottom:18px;
+  }
+  .foot-grid ul{ list-style:none; display:flex; flex-direction:column; gap:11px; }
+  .foot-grid ul a{ font-size:0.88rem; color:rgba(245,242,234,0.7); transition:color .2s; }
+  .foot-grid ul a:hover{ color:var(--gold); }
+  .foot-brand p{ color:rgba(245,242,234,0.55); font-size:0.88rem; line-height:1.6; max-width:300px; margin-top:14px; }
+  .foot-bottom{
+    border-top:1px solid var(--line);
+    padding-top:24px;
+    display:flex; justify-content:space-between; align-items:center;
+    flex-wrap:wrap; gap:14px;
+    font-size:0.78rem;
+    color:rgba(245,242,234,0.45);
+  }
+  .foot-social{ display:flex; gap:14px; }
+  .foot-social a{
+    width:36px;height:36px;border-radius:50%;
+    border:1px solid var(--line);
+    display:flex; align-items:center; justify-content:center;
+    font-size:0.85rem;
+    transition:all .25s;
+  }
+  .foot-social a:hover{ background:var(--gold); color:var(--ink); border-color:var(--gold); }
+
+  /* ===================== WHATSAPP FLOATING BUTTON ===================== */
+  .wa-fab{
+    position:fixed;
+    bottom:26px; right:26px;
+    z-index:300;
+    width:62px; height:62px;
+    border-radius:50%;
+    background:#25D366;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 10px 26px rgba(37,211,102,0.45);
+    animation:wa-bounce 2.6s ease-in-out infinite;
+    border:none;
+    cursor:pointer;
+  }
+  .wa-fab::before{
+    content:"";
+    position:absolute; inset:0;
+    border-radius:50%;
+    background:#25D366;
+    animation:wa-ping 2.2s cubic-bezier(0,0,0.2,1) infinite;
+    z-index:-1;
+  }
+  .wa-fab svg{ width:30px; height:30px; }
+  .wa-tooltip{
+    position:absolute;
+    right:74px; top:50%;
+    transform:translateY(-50%);
+    background:var(--cream);
+    color:var(--ink);
+    padding:8px 14px;
+    border-radius:999px;
+    font-size:0.78rem;
+    font-weight:700;
+    white-space:nowrap;
+    opacity:0;
+    transition:opacity .25s, transform .25s;
+    pointer-events:none;
+  }
+  .wa-fab:hover .wa-tooltip{ opacity:1; transform:translateY(-50%) translateX(-4px); }
+  @keyframes wa-bounce{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-8px); } }
+  @keyframes wa-ping{ 0%{ transform:scale(1); opacity:0.55; } 100%{ transform:scale(1.7); opacity:0; } }
+  @media (max-width:560px){ .wa-fab{ width:54px; height:54px; bottom:18px; right:18px; } .wa-fab svg{ width:26px; height:26px; } }
+
+  /* ===================== MOBILE NAV DRAWER ===================== */
+  .mobile-drawer{
+    position:fixed; inset:0;
+    background:rgba(10,10,11,0.97);
+    z-index:400;
+    display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
+    gap:30px;
+    transform:translateX(100%);
+    transition:transform .4s cubic-bezier(.65,0,.35,1);
+  }
+  .mobile-drawer.open{ transform:translateX(0); }
+  .mobile-drawer a{
+    font-family:'Anton', sans-serif;
+    font-size:1.8rem;
+    text-transform:uppercase;
+  }
+  .mobile-drawer .close-x{
+    position:absolute; top:26px; right:26px;
+    font-size:1.6rem;
+    background:none; border:none; color:var(--cream); cursor:pointer;
+  }
+
+  /* reduced motion */
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important; scroll-behavior:auto !important; }
+  }
+
+  .reveal{ opacity:0; transform:translateY(28px); transition:opacity .7s ease, transform .7s ease; }
+  .reveal.in{ opacity:1; transform:translateY(0); }
+</style>
+</head>
+<body>
+
+<!-- ===================== NAVBAR ===================== -->
+<header class="navbar" id="navbar">
+  <a href="#top" class="brand">
+    <span class="mark"></span>
+    <span>Usama Lens Store<small>ShadeX Eyewear</small></span>
+  </a>
+  <nav class="nav-links">
+    <a href="#shop">Shop</a>
+    <a href="#why">Why Us</a>
+    <a href="#viral">Viral</a>
+    <a href="#reviews">Reviews</a>
+    <a href="#contact">Contact</a>
+  </nav>
+  <div class="nav-cta">
+    <a href="#shop" class="btn-ghost">Shop Now</a>
+    <button class="burger" id="burgerBtn" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<div class="mobile-drawer" id="mobileDrawer">
+  <button class="close-x" id="closeDrawer" aria-label="Close menu">✕</button>
+  <a href="#shop">Shop</a>
+  <a href="#why">Why Us</a>
+  <a href="#viral">Viral</a>
+  <a href="#reviews">Reviews</a>
+  <a href="#contact">Contact</a>
+</div>
+
+<!-- ===================== HERO ===================== -->
+<section class="hero" id="top">
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <div class="eyebrow"><span class="dot"></span>New Drop · Limited Stock</div>
+      <h1 class="display">See It<br><span class="accent">Different.</span></h1>
+      <p>ShadeX by Usama Lens Store — sunglasses built for the camera, the sun, and the scroll. Polarized lenses, durable frames, and a look that travels straight from your face to the feed.</p>
+      <div class="hero-actions">
+        <a href="#shop" class="btn-solid">Shop The Drop →</a>
+        <a href="https://wa.me/923000000000" target="_blank" rel="noopener" class="btn-ghost">Order on WhatsApp</a>
+      </div>
+      <div class="hero-stats">
+        <div><strong>50K+</strong><span>Happy Wearers</span></div>
+        <div><strong>4.9★</strong><span>Average Rating</span></div>
+        <div><strong>2-Day</strong><span>Fast Delivery</span></div>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="float-chip one"><span class="ico">🕶️</span> UV400 Protected</div>
+      <div class="tilt-card" id="tiltCard">
+        <div class="glare"></div>
+        <img src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?q=80&w=900&auto=format&fit=crop" alt="ShadeX signature sunglasses on display">
+        <div class="tag">
+          <span class="name">ShadeX — Eclipse</span>
+          <span class="price">PKR 2,499</span>
+        </div>
+      </div>
+      <div class="float-chip two"><span class="ico">🔥</span> Trending on TikTok</div>
+    </div>
+  </div>
+
+  <div class="scroll-cue"><span class="line"></span>Scroll</div>
+</section>
+
+<!-- ===================== MARQUEE ===================== -->
+<div class="marquee">
+  <div class="marquee-track" id="marqueeTrack">
+    <span>Free Delivery Nationwide <span class="star">★</span> Polarized UV400 Lenses <span class="star">★</span> Cash On Delivery <span class="star">★</span> 7-Day Easy Return <span class="star">★</span></span>
+    <span>Free Delivery Nationwide <span class="star">★</span> Polarized UV400 Lenses <span class="star">★</span> Cash On Delivery <span class="star">★</span> 7-Day Easy Return <span class="star">★</span></span>
+  </div>
+</div>
+
+<!-- ===================== SHOP / PRODUCTS ===================== -->
+<section class="section" id="shop">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div>
+        <div class="eyebrow">The Collection</div>
+        <h2 class="display">Best Sellers</h2>
+      </div>
+      <p>Hand-picked frames trending across Pakistan right now — polarized, lightweight, and made for everyday flex.</p>
+    </div>
+
+    <div class="product-grid">
+      <div class="product-card reveal">
+        <div class="product-media">
+          <span class="badge">Viral</span>
+          <img src="https://images.unsplash.com/photo-1511499767150-a48a237f0083?q=80&w=700&auto=format&fit=crop" alt="Classic aviator sunglasses">
+          <button class="quick-add">Quick Add</button>
+        </div>
+        <div class="product-info">
+          <div class="pname">Aviator Classic</div>
+          <div class="stars">★★★★★</div>
+          <div class="pmeta">
+            <div><span class="old">Rs 3,200</span><span class="price">Rs 2,199</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card reveal">
+        <div class="product-media">
+          <span class="badge gold">Best Seller</span>
+          <img src="https://images.unsplash.com/photo-1577803645773-f96470509666?q=80&w=700&auto=format&fit=crop" alt="Oversized black sunglasses">
+          <button class="quick-add">Quick Add</button>
+        </div>
+        <div class="product-info">
+          <div class="pname">Oversized Onyx</div>
+          <div class="stars">★★★★★</div>
+          <div class="pmeta">
+            <div><span class="old">Rs 2,800</span><span class="price">Rs 1,999</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card reveal">
+        <div class="product-media">
+          <span class="badge">New</span>
+          <img src="https://images.unsplash.com/photo-1604004555489-723a93d6ce74?q=80&w=700&auto=format&fit=crop" alt="Cat eye sunglasses">
+          <button class="quick-add">Quick Add</button>
+        </div>
+        <div class="product-info">
+          <div class="pname">Cat-Eye Noir</div>
+          <div class="stars">★★★★☆</div>
+          <div class="pmeta">
+            <div><span class="old">Rs 3,000</span><span class="price">Rs 2,399</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card reveal">
+        <div class="product-media">
+          <span class="badge gold">Top Rated</span>
+          <img src="https://images.unsplash.com/photo-1473496169904-658ba7c44d8a?q=80&w=700&auto=format&fit=crop" alt="Round retro sunglasses">
+          <button class="quick-add">Quick Add</button>
+        </div>
+        <div class="product-info">
+          <div class="pname">Retro Round Gold</div>
+          <div class="stars">★★★★★</div>
+          <div class="pmeta">
+            <div><span class="old">Rs 2,600</span><span class="price">Rs 1,899</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== WHY US ===================== -->
+<section class="section" id="why">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div>
+        <div class="eyebrow">The Difference</div>
+        <h2 class="display">Why ShadeX</h2>
+      </div>
+      <p>Every pair is checked for clarity, comfort, and shine before it leaves our store.</p>
+    </div>
+
+    <div class="why-grid reveal">
+      <div class="why-cell">
+        <span class="num">01</span>
+        <h3>Polarized Lenses</h3>
+        <p>Cuts glare completely so colors stay true, even under direct sunlight.</p>
+      </div>
+      <div class="why-cell">
+        <span class="num">02</span>
+        <h3>UV400 Protection</h3>
+        <p>Blocks 100% of harmful UVA/UVB rays to keep your eyes safe all day.</p>
+      </div>
+      <div class="why-cell">
+        <span class="num">03</span>
+        <h3>Durable Frames</h3>
+        <p>Flexible hinges and scratch-resistant coating built for daily wear.</p>
+      </div>
+      <div class="why-cell">
+        <span class="num">04</span>
+        <h3>COD Nationwide</h3>
+        <p>Order with confidence — pay only when your ShadeX pair arrives.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== VIRAL / TIKTOK STRIP ===================== -->
+<section class="section" id="viral">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div>
+        <div class="eyebrow">#ShadeXCheck</div>
+        <h2 class="display">Going Viral</h2>
+      </div>
+      <p>Real customers, real reels. Tag us to get featured on the next drop.</p>
+    </div>
+
+    <div class="social-strip reveal">
+      <div class="reel">
+        <img src="https://images.unsplash.com/photo-1577803645773-f96470509666?q=80&w=500&auto=format&fit=crop" alt="Customer wearing ShadeX sunglasses">
+        <div class="play"></div>
+        <div class="views">128K views</div>
+      </div>
+      <div class="reel">
+        <img src="https://images.unsplash.com/photo-1511499767150-a48a237f0083?q=80&w=500&auto=format&fit=crop" alt="Customer street style with sunglasses">
+        <div class="play"></div>
+        <div class="views">94K views</div>
+      </div>
+      <div class="reel">
+        <img src="https://images.unsplash.com/photo-1604004555489-723a93d6ce74?q=80&w=500&auto=format&fit=crop" alt="Customer wearing cat eye sunglasses">
+        <div class="play"></div>
+        <div class="views">210K views</div>
+      </div>
+      <div class="reel">
+        <img src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?q=80&w=500&auto=format&fit=crop" alt="ShadeX sunglasses close up"> 
+        <div class="play"></div>
+        <div class="views">76K views</div>
+      </div>
+      <div class="reel">
+        <img src="https://images.unsplash.com/photo-1473496169904-658ba7c44d8a?q=80&w=500&auto=format&fit=crop" alt="Customer wearing retro round sunglasses">
+        <div class="play"></div>
+        <div class="views">152K views</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== REVIEWS ===================== -->
+<section class="section" id="reviews">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div>
+        <div class="eyebrow">Customer Love</div>
+        <h2 class="display">What They Say</h2>
+      </div>
+    </div>
+
+    <div class="testi-grid reveal">
+      <div class="testi-card">
+        <div class="stars">★★★★★</div>
+        <p>Quality bohat acha hai, exactly jaisa pic mein dikhaya tha. Delivery bhi 2 din mein mil gayi. Highly recommend!</p>
+        <div class="testi-who">
+          <div class="av">A</div>
+          <div><strong>Ahmed R.</strong><span>Lahore</span></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="stars">★★★★★</div>
+        <p>Bohat hi stylish frame hai, dosto ne bhi pasand kiya. Price bhi reasonable hai is quality ke liye.</p>
+        <div class="testi-who">
+          <div class="av">S</div>
+          <div><strong>Sara K.</strong><span>Karachi</span></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="stars">★★★★★</div>
+        <p>WhatsApp pe order kiya tha, response fast tha aur packaging bhi premium thi. Will order again.</p>
+        <div class="testi-who">
+          <div class="av">B</div>
+          <div><strong>Bilal M.</strong><span>Islamabad</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CTA BAND ===================== -->
+<section class="section" id="contact">
+  <div class="cta-band reveal">
+    <div class="eyebrow">Limited Stock Left</div>
+    <h2 class="display">Grab Your<br>ShadeX Today</h2>
+    <p>DM us on WhatsApp for instant order, custom requests, or bulk pricing. Fast reply guaranteed.</p>
+    <a href="https://wa.me/923000000000" target="_blank" rel="noopener" class="btn-solid">Message on WhatsApp →</a>
+  </div>
+</section>
+
+<!-- ===================== FOOTER ===================== -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <div class="brand"><span class="mark"></span><span>Usama Lens Store</span></div>
+        <p>ShadeX eyewear — premium sunglasses for everyday wear and viral moments. Based in Pakistan, shipping nationwide.</p>
+      </div>
+      <div>
+        <h4>Shop</h4>
+        <ul>
+          <li><a href="#shop">Aviators</a></li>
+          <li><a href="#shop">Oversized</a></li>
+          <li><a href="#shop">Cat-Eye</a></li>
+          <li><a href="#shop">Retro Round</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Support</h4>
+        <ul>
+          <li><a href="#contact">Contact Us</a></li>
+          <li><a href="#contact">Track Order</a></li>
+          <li><a href="#contact">Returns</a></li>
+          <li><a href="#why">FAQs</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="https://wa.me/923000000000" target="_blank" rel="noopener">WhatsApp: +92 300 0000000</a></li>
+          <li><a href="mailto:hello@usamalensstore.com">hello@usamalensstore.com</a></li>
+          <li>Lahore, Pakistan</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="foot-bottom">
+      <span>© 2026 Usama Lens Store — ShadeX. All rights reserved.</span>
+      <div class="foot-social">
+        <a href="#" aria-label="Instagram">IG</a>
+        <a href="#" aria-label="TikTok">TT</a>
+        <a href="#" aria-label="Facebook">FB</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ===================== WHATSAPP FLOATING BUTTON ===================== -->
+<a href="https://wa.me/923000000000" target="_blank" rel="noopener" class="wa-fab" aria-label="Chat on WhatsApp">
+  <span class="wa-tooltip">Chat with us</span>
+  <svg viewBox="0 0 32 32" fill="white" xmlns="http://www.w3.org/2000/svg">
+    <path d="M16.001 3.2c-7.06 0-12.8 5.74-12.8 12.8 0 2.26.6 4.45 1.74 6.38L3.2 28.8l6.6-1.7a12.76 12.76 0 0 0 6.2 1.58h.005c7.06 0 12.8-5.74 12.8-12.8s-5.74-12.68-12.804-12.68zm0 23.36h-.004a10.6 10.6 0 0 1-5.4-1.48l-.388-.23-4.018 1.04 1.07-3.92-.252-.402a10.56 10.56 0 0 1-1.62-5.57c0-5.83 4.75-10.58 10.616-10.58 2.835 0 5.5 1.106 7.504 3.114a10.5 10.5 0 0 1 3.108 7.476c0 5.83-4.75 10.55-10.616 10.55zm5.81-7.91c-.318-.16-1.882-.93-2.174-1.036-.292-.107-.504-.16-.717.16-.213.318-.823 1.035-1.01 1.247-.187.213-.373.24-.692.08-.318-.16-1.345-.495-2.563-1.582-.948-.845-1.587-1.89-1.774-2.21-.187-.318-.02-.49.16-.65.16-.16.346-.41.52-.616.173-.21.23-.357.346-.595.118-.24.06-.45-.027-.65-.107-.21-.95-2.28-1.297-3.13-.347-.838-.7-.725-.96-.738l-.823-.014c-.265 0-.692.1-.946.398-.255.297-.973 1.013-.973 2.47s.998 2.86 1.137 3.058c.14.198 1.917 2.93 4.643 4.106 2.73 1.176 2.73.784 3.218.736.49-.05 1.582-.65 1.806-1.28.225-.63.225-1.17.16-1.28-.066-.107-.24-.17-.504-.32z"/>
+  </svg>
+</a>
+
+<script>
+  // ---------- Navbar hide on scroll ----------
+  const navbar = document.getElementById('navbar');
+  let lastY = window.scrollY;
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY;
+    if (y > 60) navbar.classList.add('scrolled'); else navbar.classList.remove('scrolled');
+
+    if (y > lastY && y > 140) {
+      navbar.classList.add('hide');
+    } else {
+      navbar.classList.remove('hide');
+    }
+    lastY = y;
+  }, { passive: true });
+
+  // ---------- Mobile drawer ----------
+  const burgerBtn = document.getElementById('burgerBtn');
+  const drawer = document.getElementById('mobileDrawer');
+  const closeDrawer = document.getElementById('closeDrawer');
+  burgerBtn.addEventListener('click', () => drawer.classList.add('open'));
+  closeDrawer.addEventListener('click', () => drawer.classList.remove('open'));
+  drawer.querySelectorAll('a').forEach(a => a.addEventListener('click', () => drawer.classList.remove('open')));
+
+  // ---------- 3D tilt hero card ----------
+  const tiltCard = document.getElementById('tiltCard');
+  if (window.matchMedia('(pointer: fine)').matches) {
+    tiltCard.addEventListener('mousemove', (e) => {
+      const rect = tiltCard.getBoundingClientRect();
+      const px = (e.clientX - rect.left) / rect.width;
+      const py = (e.clientY - rect.top) / rect.height;
+      const rx = (py - 0.5) * -16;
+      const ry = (px - 0.5) * 16;
+      tiltCard.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
+      tiltCard.style.setProperty('--mx', `${px * 100}%`);
+      tiltCard.style.setProperty('--my', `${py * 100}%`);
+    });
+    tiltCard.addEventListener('mouseleave', () => {
+      tiltCard.style.transform = 'rotateX(0deg) rotateY(0deg)';
+    });
+  }
+
+  // ---------- Scroll reveal ----------
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  revealEls.forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>
